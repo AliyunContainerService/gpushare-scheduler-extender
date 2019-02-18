@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: binpack-4
+  labels:
+    app: binpack-4
+
+spec:
+  replicas: 1
+
+  selector: # define how the deployment finds the pods it mangages
+    matchLabels:
+      app: binpack-4
+
+  template: # define the pods specifications
+    metadata:
+      labels:
+        app: binpack-4
+
+    spec:
+      containers:
+      - name: binpack-4
+        image: cheyang/gpu-player:v2
+        resources:
+          limits:
+            aliyun.com/gpu-mem: 16276
+
