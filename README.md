@@ -78,3 +78,7 @@ You can check the [User Guide](docs/userguide.md) to know how to use it.
 - Automated Deployment for the Kubernetes cluster which is deployed by kubeadm
 - Scheduler Extener High Availablity
 - Generic Solution for GPU, RDMA and other devices
+
+## Acknowledgments
+
+- GPU sharing solution is based on [Nvidia Docker2](https://github.com/NVIDIA/nvidia-docker), and their [gpu sharing design](https://docs.google.com/document/d/1ZgKH_K4SEfdiE_OfxQ836s4yQWxZfSjS288Tq9YIWCA/edit#heading=h.r88v2xgacqr) is our reference. The Nvidia Community is very supportive and We are very grateful.
