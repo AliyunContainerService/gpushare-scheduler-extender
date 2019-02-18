@@ -74,7 +74,7 @@ You can check the [User Guide](docs/userguide.md) to know how to use it.
 
 ## Roadmap
 
-- Integrate Nvidia MPS as optional choice for isolation
+- Integrate Nvidia MPS as the option for isolation
 - Automated Deployment for the Kubernetes cluster which is deployed by kubeadm
 - Scheduler Extener High Availablity
 - Generic Solution for GPU, RDMA and other devices
