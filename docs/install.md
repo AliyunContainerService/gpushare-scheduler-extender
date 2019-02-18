@@ -30,7 +30,7 @@ curl -O https://raw.githubusercontent.com/AliyunContainerService/gpushare-schedu
 kubectl create -f gpushare-schd-extender.yaml
 ```
 
-2\. Modify scheduler configuration to add `/etc/kubernetes/scheduler-policy-config.json`, here is the modified [kube-scheduler.yaml](../config/kube-scheduler.yaml)
+2\. Modify scheduler configuration to add `/etc/kubernetes/scheduler-policy-config.json`, here is the sample of the modified [kube-scheduler.yaml](../config/kube-scheduler.yaml)
 
 2.1 Add Policy config file parameter in scheduler arguments
 
@@ -71,7 +71,7 @@ kubectl label node <target_node> gpushare=true
 ```
 
 ```
-kubectl label no cn-shanghai.i-uf67d2vm55fwyqf0knqf gpushare=true
+kubectl label no mynode gpushare=true
 ```
 
 5\. Install Kubectl extension
