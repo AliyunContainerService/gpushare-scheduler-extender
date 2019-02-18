@@ -88,6 +88,6 @@ sudo mv ./kubectl /usr/local/bin/kubectl
 5.2 Download and install the kubectl extension
 
 ```
-curl -o /usr/bin/kubectl-inspect-gpushare https://github.com/AliyunContainerService/gpushare-device-plugin/releases/download/v0.1.0/arenakubectl-inspect-gpushare-v2
+curl -o /usr/bin/kubectl-inspect-gpushare https://github.com/AliyunContainerService/gpushare-device-plugin/releases/download/v0.1.0/kubectl-inspect-gpushare-v2
 chmod u+x /usr/bin/kubectl-inspect-gpushare
 ```
