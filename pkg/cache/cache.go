@@ -120,7 +120,7 @@ func (cache *SchedulerCache) RemovePod(pod *v1.Pod) {
 	if err == nil {
 		n.removePod(pod)
 	} else {
-		log.Printf("debug: Failed to get node %s due to %v")
+		log.Printf("debug: Failed to get node %s due to %v", pod.Spec.NodeName, err)
 	}
 
 	cache.forgetPod(pod.UID)

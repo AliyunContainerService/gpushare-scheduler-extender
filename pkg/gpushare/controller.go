@@ -244,7 +244,7 @@ func (c *Controller) addPodToCache(obj interface{}) {
 
 	podKey, err := KeyFunc(pod)
 	if err != nil {
-		log.Println("warn: Failed to get the jobkey: %v", err)
+		log.Printf("warn: Failed to get the jobkey: %v", err)
 		return
 	}
 
@@ -280,7 +280,7 @@ func (c *Controller) updatePodInCache(oldObj, newObj interface{}) {
 	if needUpdate {
 		podKey, err := KeyFunc(newPod)
 		if err != nil {
-			log.Println("warn: Failed to get the jobkey: %v", err)
+			log.Printf("warn: Failed to get the jobkey: %v", err)
 			return
 		}
 		log.Printf("info: Need to update pod name %s in ns %s and old status is %v, new status is %v; its old annotation %v and new annotation %v",
@@ -324,7 +324,7 @@ func (c *Controller) deletePodFromCache(obj interface{}) {
 	log.Printf("debug: delete pod %s in ns %s", pod.Name, pod.Namespace)
 	podKey, err := KeyFunc(pod)
 	if err != nil {
-		log.Println("warn: Failed to get the jobkey: %v", err)
+		log.Printf("warn: Failed to get the jobkey: %v", err)
 		return
 	}
 	c.podQueue.Add(podKey)

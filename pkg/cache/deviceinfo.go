@@ -44,7 +44,7 @@ func (d *DeviceInfo) GetUsedGPUMemory() (gpuMem uint) {
 	defer d.rwmu.RUnlock()
 	for _, pod := range d.podMap {
 		if pod.Status.Phase == v1.PodSucceeded || pod.Status.Phase == v1.PodFailed {
-			log.Printf("debug: skip the pod %s in ns %s due to its status is %S", pod.Name, pod.Namespace, pod.Status.Phase)
+			log.Printf("debug: skip the pod %s in ns %s due to its status is %s", pod.Name, pod.Namespace, pod.Status.Phase)
 			continue
 		}
 		// gpuMem += utils.GetGPUMemoryFromPodEnv(pod)
