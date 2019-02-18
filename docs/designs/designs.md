@@ -54,13 +54,13 @@ Below is the architecture:
 
 ### Process
 
-1. Device Resource Report
+#### 1\. Device Resource Report
 
 The GPU Share Device Plugin uses the nvml library to query the number of GPU devices and the GPU memory of devices. The total GPU memory (quantity * memory) of the node is reported to the Kubelet by `ListAndWatch()`; and Kubelet reports these to the Kubernetes API Server.
 
 If the node has 2 GPUs, and each GPU has 16276MiB, the GPU Memory of the node is 16276 * 2 = 32552. And the number of GPU devices on the node is also reported as another Extended Resource. 
 
-2\. Schedule
+#### 2\. Schedule
 
 The GPU Share Scheduler Extender records the allocation information into the annotation of, and determine whether each GPU has enough gpu-mem according to this information when the scheduler doing the filter.
 
@@ -89,7 +89,7 @@ For example, when the user wants to request the Pod with gpu-mem:8138. And the n
 
 ![](bind.jpg)
 
-3\. Run the deployment on the node
+#### 3\. Run the deployment on the node
 
 
 An `Allocate` function in GPU Share Device Plugin which is called from Kubelet before creating the container, and the paramter of `Allocate` is the GPU memory request amount: 
