@@ -20,7 +20,7 @@ Now there is a GPU sharing solution on native Kubernetes you can take. it is bas
 
 ## Design
 
-For more details about the design of this project, please read the [Design Document](docs/designs/designs.md).
+For more details about the design of this project, please read the [Design](docs/designs/designs.md).
 
 ## Setup
 

@@ -273,7 +273,7 @@ func (c *Controller) updatePodInCache(oldObj, newObj interface{}) {
 	if c.schedulerCache.KnownPod(podUID) && utils.IsCompletePod(newPod) {
 		needUpdate = true
 	}
-	// 2. Need update when it's unkown pod, and GPU annotation has been set
+	// 2. Need update when it's unknown pod, and GPU annotation has been set
 	if !c.schedulerCache.KnownPod(podUID) && utils.GetGPUIDFromAnnotation(newPod) >= 0 {
 		needUpdate = true
 	}

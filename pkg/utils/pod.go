@@ -9,7 +9,7 @@ import (
 	"k8s.io/api/core/v1"
 )
 
-// assignedNonTerminatedPod selects pods that are assigned and non-terminal (scheduled and running).
+// AssignedNonTerminatedPod selects pods that are assigned and non-terminal (scheduled and running).
 func AssignedNonTerminatedPod(pod *v1.Pod) bool {
 	if pod.DeletionTimestamp != nil {
 		return false
@@ -24,7 +24,7 @@ func AssignedNonTerminatedPod(pod *v1.Pod) bool {
 	return true
 }
 
-// Determine if the pod is complete
+// IsCompletePod determines if the pod is complete
 func IsCompletePod(pod *v1.Pod) bool {
 	if pod.DeletionTimestamp != nil {
 		return true
@@ -36,12 +36,12 @@ func IsCompletePod(pod *v1.Pod) bool {
 	return false
 }
 
-// Determine if it's the pod for GPU sharing
+// IsGPUsharingPod determines if it's the pod for GPU sharing
 func IsGPUsharingPod(pod *v1.Pod) bool {
 	return GetGPUMemoryFromPodResource(pod) > 0
 }
 
-// Get GPU ID from Annotation
+// GetGPUIDFromAnnotation gets GPU ID from Annotation
 func GetGPUIDFromAnnotation(pod *v1.Pod) int {
 	id := -1
 	if len(pod.ObjectMeta.Annotations) > 0 {
@@ -59,7 +59,7 @@ func GetGPUIDFromAnnotation(pod *v1.Pod) int {
 	return id
 }
 
-// Get GPU ID from Env
+// GetGPUIDFromEnv gets GPU ID from Env
 func GetGPUIDFromEnv(pod *v1.Pod) int {
 	id := -1
 	for _, container := range pod.Spec.Containers {
@@ -90,7 +90,7 @@ loop:
 	return devIdx
 }
 
-// Found the GPU Memory of the pod, choose the larger one between gpu memory and gpu init container memory
+// GetGPUMemoryFromPodAnnotation gets the GPU Memory of the pod, choose the larger one between gpu memory and gpu init container memory
 func GetGPUMemoryFromPodAnnotation(pod *v1.Pod) (gpuMemory uint) {
 	if len(pod.ObjectMeta.Annotations) > 0 {
 		value, found := pod.ObjectMeta.Annotations[EnvResourceByPod]
@@ -112,7 +112,7 @@ func GetGPUMemoryFromPodAnnotation(pod *v1.Pod) (gpuMemory uint) {
 	return gpuMemory
 }
 
-// Found the GPU Memory of the pod, choose the larger one between gpu memory and gpu init container memory
+// GetGPUMemoryFromPodEnv gets the GPU Memory of the pod, choose the larger one between gpu memory and gpu init container memory
 func GetGPUMemoryFromPodEnv(pod *v1.Pod) (gpuMemory uint) {
 	for _, container := range pod.Spec.Containers {
 		gpuMemory += getGPUMemoryFromContainerEnv(container)
@@ -142,7 +142,7 @@ loop:
 	return gpuMemory
 }
 
-// Get GPU Memory of the Pod
+// GetGPUMemoryFromPodResource gets GPU Memory of the Pod
 func GetGPUMemoryFromPodResource(pod *v1.Pod) int {
 	var total int
 	containers := pod.Spec.Containers
@@ -154,6 +154,7 @@ func GetGPUMemoryFromPodResource(pod *v1.Pod) int {
 	return total
 }
 
+// GetGPUMemoryFromPodResource gets GPU Memory of the Container
 func GetGPUMemoryFromContainerResource(container v1.Container) int {
 	var total int
 	if val, ok := container.Resources.Limits[ResourceName]; ok {
@@ -162,7 +163,7 @@ func GetGPUMemoryFromContainerResource(container v1.Container) int {
 	return total
 }
 
-// update pod env with devId
+// GetUpdatedPodEnvSpec updates pod env with devId
 func GetUpdatedPodEnvSpec(oldPod *v1.Pod, devId int, totalGPUMemByDev int) (newPod *v1.Pod) {
 	newPod = oldPod.DeepCopy()
 	for i, c := range newPod.Spec.Containers {
@@ -187,7 +188,7 @@ func GetUpdatedPodEnvSpec(oldPod *v1.Pod, devId int, totalGPUMemByDev int) (newP
 	return newPod
 }
 
-// update pod env with devId
+// GetUpdatedPodAnnotationSpec updates pod env with devId
 func GetUpdatedPodAnnotationSpec(oldPod *v1.Pod, devId int, totalGPUMemByDev int) (newPod *v1.Pod) {
 	newPod = oldPod.DeepCopy()
 	if len(newPod.ObjectMeta.Annotations) == 0 {
