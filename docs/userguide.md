@@ -8,13 +8,12 @@ measure enforce that at the runtime level. For now, you have to take care of iso
 
 ```
 # kubectl inspect gpushare
-NAME           IPADDRESS     GPU0(Allocated MiB/Total MiB)  GPU Memory
-i-2ze0gl97vw1  192.168.0.72  7606/7606                      7606/7606
-i-2ze0gl97vw2  192.168.0.73  3803/7606                      3803/7606
-i-2ze0gl97vw3  192.168.0.71  7606/7606                      7606/7606
----------------------------------------------------------------------------------------
+NAME                                IPADDRESS     GPU0(Allocated/Total)  GPU Memory(GiB)
+cn-shanghai.i-uf61h64dz1tmlob9hmtb  192.168.0.71  6/15                   6/15
+cn-shanghai.i-uf61h64dz1tmlob9hmtc  192.168.0.70  3/15                   3/15
+------------------------------------------------------------------------------
 Allocated/Total GPU Memory In Cluster:
-19015/22818 (83%)
+9/30 (30%)
 ```
 
 > For more details, please run `kubectl inspect gpushare -d`
@@ -22,8 +21,8 @@ Allocated/Total GPU Memory In Cluster:
 2. To request GPU sharing, you just need to specify `aliyun.com/gpu-mem`
 
 ```
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: apps/v1beta1
+kind: StatefulSet
 
 metadata:
   name: binpack-1
@@ -31,8 +30,8 @@ metadata:
     app: binpack-1
 
 spec:
-  replicas: 1
-
+  replicas: 3
+  serviceName: "binpack-1"
   selector: # define how the deployment finds the pods it mangages
     matchLabels:
       app: binpack-1
@@ -48,26 +47,26 @@ spec:
         image: cheyang/gpu-player:v2
         resources:
           limits:
-            # MiB
-            aliyun.com/gpu-mem: 3803
+            # GiB
+            aliyun.com/gpu-mem: 3
 ```
 
-> Notice that the GPU memory of each GPU is 7606 MiB, 3803 MiB indicates half of the GPU.
+> Notice that the GPU memory of each GPU is 3 GiB, 3 GiB indicates one third of the GPU.
 
 3\. From the following environment variables,the application can limit the GPU usage by using CUDA API or framework API, such as Tensorflow
 
 ```
-# The total amount of GPU memory on the current device (MiB)
-ALIYUN_COM_GPU_MEM_DEV=7606 
+# The total amount of GPU memory on the current device (GiB)
+ALIYUN_COM_GPU_MEM_DEV=15 
 
-# The GPU Memory of the container(MiB)
-ALIYUN_COM_GPU_MEM_CONTAINER=3803
+# The GPU Memory of the container(GiB)
+ALIYUN_COM_GPU_MEM_CONTAINER=3
 ```
 
 Limit GPU memory by setting fraction through TensorFlow API
 
 ```
-fraction = round( 3803 * 0.7 / 7606 , 1 )
+fraction = round( 3 * 0.7 / 15 , 1 )
 config = tf.ConfigProto()
 config.gpu_options.per_process_gpu_memory_fraction = fraction
 sess = tf.Session(config=config)
