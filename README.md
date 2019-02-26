@@ -53,8 +53,8 @@ You can check the [User Guide](docs/userguide.md) to know how to use it.
 ```
 # mkdir -p $GOPATH/src/github.com/AliyunContainerService
 # cd $GOPATH/src/github.com/AliyunContainerService
-# git clone https://github.com/AliyunContainerService/gpushare-scheduler-extender.git
-# cd gpushare-scheduler-extender
+# git clone https://github.com/AliyunContainerService/gpushare-device-plugin.git
+# cd gpushare-device-plugin
 # go build -o $GOPATH/bin/kubectl-inspect-gpushare-v2 cmd/inspect/*.go
 ```
 
