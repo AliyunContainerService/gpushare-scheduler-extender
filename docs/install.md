@@ -70,6 +70,8 @@ kubectl create -f device-plugin-ds.yaml
 kubectl label node <target_node> gpushare=true
 ```
 
+For example:
+
 ```
 kubectl label no mynode gpushare=true
 ```
@@ -82,14 +84,14 @@ kubectl label no mynode gpushare=true
 ```
 curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.12.1/bin/linux/amd64/kubectl
 chmod +x ./kubectl
-sudo mv ./kubectl /usr/local/bin/kubectl
+sudo mv ./kubectl /usr/bin/kubectl
 ```
 
 5.2 Download and install the kubectl extension
 
 ```
 cd /usr/bin/
-wget https://github.com/AliyunContainerService/gpushare-device-plugin/releases/download/v0.1.0/kubectl-inspect-gpushare-v2
+wget https://github.com/AliyunContainerService/gpushare-device-plugin/releases/download/v0.2.0/kubectl-inspect-gpushare-v2
 mv kubectl-inspect-gpushare-v2 kubectl-inspect-gpushare
 chmod u+x /usr/bin/kubectl-inspect-gpushare
 ```
