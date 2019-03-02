@@ -31,7 +31,6 @@ metadata:
 
 spec:
   replicas: 3
-  podManagementPolicy: "Parallel"
   serviceName: "binpack-1"
   selector: # define how the deployment finds the pods it mangages
     matchLabels:
