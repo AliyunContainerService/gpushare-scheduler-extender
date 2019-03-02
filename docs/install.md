@@ -64,6 +64,8 @@ wget https://raw.githubusercontent.com/AliyunContainerService/gpushare-device-pl
 kubectl create -f device-plugin-ds.yaml
 ```
 
+> Notice: please remove default GPU device plugin, for example, if you are using [nvidia-device-plugin](https://github.com/NVIDIA/k8s-device-plugin/blob/v1.11/nvidia-device-plugin.yml), you can run `kubectl delete ds -n kube-system nvidia-device-plugin-daemonset` to delete.
+
 4\. Add gpushare node labels to the nodes requiring GPU sharing
 
 ```
