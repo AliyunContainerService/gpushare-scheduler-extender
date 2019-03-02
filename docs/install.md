@@ -93,7 +93,6 @@ sudo mv ./kubectl /usr/bin/kubectl
 
 ```
 cd /usr/bin/
-wget https://github.com/AliyunContainerService/gpushare-device-plugin/releases/download/v0.2.0/kubectl-inspect-gpushare-v2
-mv kubectl-inspect-gpushare-v2 kubectl-inspect-gpushare
+wget https://github.com/AliyunContainerService/gpushare-device-plugin/releases/download/v0.2.0/kubectl-inspect-gpushare
 chmod u+x /usr/bin/kubectl-inspect-gpushare
 ```
