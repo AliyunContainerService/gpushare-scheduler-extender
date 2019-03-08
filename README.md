@@ -64,7 +64,7 @@ go build -o $GOPATH/bin/kubectl-inspect-gpushare-v2 cmd/inspect/*.go
 
 [![](demo1.jpg)](http://cloud.video.taobao.com//play/u/2987821887/p/2/e/6/t/1/214292079721.mp4)
 
-### - Demo 2:  Avoid GPU Memory requests that fit at the node level, but not at the GPU device level
+### - Demo 2:  Avoid GPU memory requests that fit at the node level, but not at the GPU device level
 
 [![](demo2.jpg)](http://cloud.video.taobao.com//play/u/2987821887/p/2/e/6/t/1/214235285109.mp4)
 
