@@ -3,12 +3,12 @@
 ## Background
 
 The Kubernetes infrastructure enforces exclusive GPU usage, preventing sharing GPUs across pods. This is not good for the users who want to use the sharing capabilities of NVIDIA GPUs to increase GPU utilization in a cluster. 
-This can achieve better isolation, ensuring that the GPU usage of applications are not affected by other applications; it is very suitable for deep learning model training scenarios, but it is usually wasteful if the scenarios are model development and model inference. In general, when we talk about shared GPUs support at cluster level, we usually think about two concepts: 
+This can achieve better isolation, ensuring that the GPU usage of each application is not affected by other applications; it is very suitable for deep learning model training scenarios, but it is usually wasteful if the scenarios are model development and model inference. In general, when we talk about shared GPUs support at cluster level, we usually think about two concepts: 
 
 1. Isolation: this is the basis for sharing a device, such as the fault isolation, memory isolation, real parallelism of the sharing of
 the resource in each container at runtime level. It's inherently defined by the hardware device and the software controlling that device in the node, such as MPS (Mutiple Processing Service). In fact, Kubernetes helps a little in this.
 
-2. Scheduling: Kubernetes should help the user to express the device sharing, and follow the user's specification to guarantee that devices can not be oversubscribed at the scheduling level but cannot in any measure enforce that at the runtime level.
+2. Scheduling: Kubernetes should help the user to express his requirements in the way devices should be shared, and follow the user's specification to guarantee that devices cannot be oversubscribed at the scheduling level. However Kubernetes cannot in any measure enforce that at the runtime level.
 
 For fine-grained GPU device scheduling, there is currently no good solution. This is because the extended resources such as GPU, RDMA in Kubernetes restricts quantities of extended resources to whole numbers, cannot support the allocation of complex resources. For example, it's impossible for a user to ask for 0.5 GPU in a Kubernetes cluster. The essential problem here is that multi-device GPU sharing is a vector resource problem, while extended resources are descriptions of scalar resources.
 
@@ -20,7 +20,7 @@ For fine-grained GPU device scheduling, there is currently no good solution. Thi
 
 ## Goals
 
-- Allow users to express requests for sharing a resource, and guarantee that the GPU can not be oversubscribed at the scheduling level.
+- Allow users to express requests for sharing a resource, and guarantee that the GPU cannot be oversubscribed at the scheduling level.
 
 ## Non Goals
 
@@ -29,11 +29,11 @@ For fine-grained GPU device scheduling, there is currently no good solution. Thi
 
 ## Design Principles
 
-- Although there are two units to describe the GPU (CUDA cores and GPU Memory), in the inference scenarios, we can make the assumption that the number of CUDA cores and GPU Memory are proportional. 
+- Although there are two ways to measure GPU capabilities (CUDA cores and GPU Memory), in the inference scenarios, we can make the assumption that the number of CUDA cores and GPU Memory are proportional. 
 
-- Leverage Extended Resources to express device sharing requests, by changing the unit from "number of GPUs" to "amount of GPU memory in MiB". If the GPU used by the node is a single device 16GiB memory, its corresponding resource is 16276MiB.
+- Leverage Extended Resources to express device sharing requests by changing the measure unit from "number of GPUs" to "amount of GPU memory in MiB". If the GPU used by the node is a single device with 16GiB of memory, it can be expressed as 16276MiB.
 
-- Since the user's appeal for the shared GPU is for the model development and prediction scenario. In these scenarios, the upper limit of the GPU resource requested by the user does not exceed one GPU, that is, the resource limit of the application is a single GPU.
+- The user's appeal for the shared GPU is for the model development and prediction scenario. In these cases, the upper limit of the GPU resource requested by the user does not exceed one GPU, that is, the resource limit of the application is a single GPU.
 
 - Do not change any Kubernetes barebone code, just leverage extended resource, scheduler extender and device plugin mechanism. 
 
@@ -62,7 +62,7 @@ If the node has 2 GPUs, and each GPU has 16276MiB, the GPU Memory of the node is
 
 #### 2\. Schedule
 
-The GPU Share Scheduler Extender records the allocation information into the annotation of, and determine whether each GPU has enough gpu-mem according to this information when the scheduler is doing the filtering.
+The GPU Share Scheduler Extender records the allocation information into annotations, and determine whether each GPU has enough gpu-mem according to this information when the scheduler is doing the filtering.
 
 2.1. After the Kubernetes scheduler finishes all the default filters, it calls the filter method of the GPU Share Scheduler Extender through http. This is because the default scheduler calculates the extended resource and can only determine whether the total amount of resources has free resources that meet the demand. Specifically determine whether the demand is met on a single device; therefore, it is necessary to check whether a single device has available resources by the GPU Share Scheduler Extender.
 
@@ -79,7 +79,7 @@ Although the N3 node has a total of 8138MiB available resources, these available
 
 2.2. When the scheduler finds a node that satisfies the requirements, it delegates the GPU Share Scheduler Extender to bind the node and the pod. Here, the extender needs to do two things:
 
-- Find the GPU device in the node according to the binpack rule, record the GPU device ID and save it as `ALIYUN_GPU_ID` to the annotation of the pod. It also saves the GPU Memory of the pod application as `ALIYUN_COM_GPU_MEM_POD` and `ALIYUN_COM_GPU_MEM_ASSUME_TIME` in the annotation of the pod. If no GPU is found at the binding time, no binding is performed at this time. The default scheduler will reschedule after the expiration timeout.
+- Find the GPU device in the node according to the binpack rule, record the GPU device ID and save it as `ALIYUN_GPU_ID` in the annotations of the pod. It also saves the GPU Memory of the pod application as `ALIYUN_COM_GPU_MEM_POD` and `ALIYUN_COM_GPU_MEM_ASSUME_TIME` in the annotations of the pod. If no GPU is found at the binding time, no binding is performed at this time. The default scheduler will reschedule after the expiration timeout.
 
 > Notice: There is also a pod annotation named `ALIYUN_COM_GPU_MEM_ASSIGNED` which is initialized as `false`. It indicates that the pod is assumed with the GPU device in the schedule period, but not assigned at the runtime.
 
