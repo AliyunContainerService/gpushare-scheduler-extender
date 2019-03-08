@@ -2,9 +2,9 @@
 
 ## 0\. Prepare GPU Node
 
-This Guide assumes that the NVIDIA drivers and nvidia-docker2 have been installed.
+This guide assumes that the NVIDIA drivers and nvidia-docker2 have been installed.
 
-Enable the nvidia runtime as your default runtime on your node. To do this, please edit the docker daemon config file which is usually present at /etc/docker/daemon.json:
+Enable the Nvidia runtime as your default runtime on your node. To do this, please edit the docker daemon config file which is usually present at /etc/docker/daemon.json:
 
 ```json
 {
@@ -30,7 +30,9 @@ curl -O https://raw.githubusercontent.com/AliyunContainerService/gpushare-schedu
 kubectl create -f gpushare-schd-extender.yaml
 ```
 
-## 2\. Modify scheduler configuration to add `/etc/kubernetes/scheduler-policy-config.json`, here is the sample of the modified [kube-scheduler.yaml](../config/kube-scheduler.yaml)
+## 2\. Modify scheduler configuration
+The goal is to include `/etc/kubernetes/scheduler-policy-config.json` into the scheduler configuration.
+Here is the sample of the modified [kube-scheduler.yaml](../config/kube-scheduler.yaml)
 
 ### 2.1 Add Policy config file parameter in scheduler arguments
 
@@ -81,7 +83,8 @@ kubectl label no mynode gpushare=true
 ## 5\. Install Kubectl extension
 
 
-### 5.1 Install kubectl 1.12 or above. You can download and install `kubectl` for linux
+### 5.1 Install kubectl 1.12 or above
+You can download and install `kubectl` for linux
 
 ```bash
 curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.12.1/bin/linux/amd64/kubectl
