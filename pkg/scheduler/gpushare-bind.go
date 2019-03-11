@@ -6,6 +6,7 @@ import (
 
 	"github.com/AliyunContainerService/gpushare-scheduler-extender/pkg/cache"
 	"k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes"
@@ -41,10 +42,14 @@ func NewGPUShareBind(clientset *kubernetes.Clientset, c *cache.SchedulerCache) *
 	}
 }
 
-func getPod(name string, namespace string, podUID types.UID, clientset *kubernetes.Clientset, c *cache.SchedulerCache) (*v1.Pod, error) {
-	pod, err := c.GetPod(name, namespace)
-	if err != nil {
-		log.Printf("warn: Failed to handle pod %s in ns %s due to error %v", name, namespace, err)
+func getPod(name string, namespace string, podUID types.UID, clientset *kubernetes.Clientset, c *cache.SchedulerCache) (pod *v1.Pod, err error) {
+	pod, err = c.GetPod(name, namespace)
+	if errors.IsNotFound(err) {
+		pod, err = clientset.CoreV1().Pods(namespace).Get(name, metav1.GetOptions{})
+		if err != nil {
+			return nil, err
+		}
+	} else if err != nil {
 		return nil, err
 	}
 	if pod.UID != podUID {
