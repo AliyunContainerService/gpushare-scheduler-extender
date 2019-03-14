@@ -256,11 +256,23 @@ func (n *NodeInfo) getAvailableGPUs() (availableGPUs map[int]uint) {
 	usedGPUs := n.getUsedGPUs()
 	availableGPUs = map[int]uint{}
 	for id, totalGPUMem := range allGPUs {
+		if n.isGPUHealthy(id) == false {
+			continue
+		}
+
 		if usedGPUMem, found := usedGPUs[id]; found {
 			availableGPUs[id] = totalGPUMem - usedGPUMem
 		}
 	}
 	return availableGPUs
+}
+
+func (n *NodeInfo) isGPUHealthy(index int) bool {
+	val, ok := n.node.Status.Allocatable[v1.ResourceName(fmt.Sprintf("%s%d", utils.ResourceStatus, index))]
+	if ok {
+		return val.Value() == int64(1)
+	}
+	return false
 }
 
 // device index: gpu memory
