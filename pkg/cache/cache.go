@@ -144,10 +144,6 @@ func (cache *SchedulerCache) GetNodeInfo(name string) (*NodeInfo, error) {
 		// if the existing node turn from non gpushare to gpushare
 		if (utils.GetTotalGPUMemory(n.node) <= 0 && utils.GetTotalGPUMemory(node) > 0) ||
 			(utils.GetGPUCountInNode(n.node) <= 0 && utils.GetGPUCountInNode(node) > 0) {
-			node, err := cache.nodeLister.Get(name)
-			if err != nil {
-				return nil, err
-			}
 			log.Printf("debug: GetNodeInfo() need update node %s from %v to %v",
 				name,
 				n.node,
