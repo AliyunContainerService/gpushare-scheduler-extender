@@ -17,7 +17,7 @@ spec:
     - --kubeconfig=/etc/kubernetes/scheduler.conf
     - --policy-config-file=/etc/kubernetes/scheduler-policy-config.json
     - --leader-elect=true
-    image: registry-vpc.cn-shanghai.aliyuncs.com/acs/kube-scheduler-amd64:v1.11.2
+    image: registry.cn-hangzhou.aliyuncs.com/acs/kube-scheduler-amd64:v1.11.2
     imagePullPolicy: IfNotPresent
     livenessProbe:
       failureThreshold: 8
