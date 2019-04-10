@@ -1,0 +1,22 @@
+version: 2
+jobs:
+  build:
+    docker:
+    - image: circleci/golang:1.10
+    working_directory: /go/src/github.com/AliyunContainerService/gpushare-scheduler-extender
+    steps:
+    - checkout
+    - setup_remote_docker:
+          docker_layer_caching: true
+    - run:
+        name: run tests
+        command: |
+          test -z $(go fmt ./...)
+          go vet ./...
+          go test -race -v ./...
+    - run: docker build -t acs/gpushare-scheduler-extender:$CIRCLE_BUILD_NUM .
+    - run:
+        name: codecov
+        command: |
+          go test -race -coverprofile=coverage.txt -covermode=atomic ./...
+          bash <(curl -s https://codecov.io/bash)
