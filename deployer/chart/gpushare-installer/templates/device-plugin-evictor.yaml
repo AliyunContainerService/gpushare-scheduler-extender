@@ -1,0 +1,44 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: gpushare-device-plugin-ds
+  namespace: kube-system
+spec:
+  template:
+    metadata:
+      annotations:
+        scheduler.alpha.kubernetes.io/critical-pod: ""
+      labels:
+        component: gpushare-device-plugin
+        app: gpushare
+        name: gpushare-device-plugin-ds
+    spec:
+      hostNetwork: true
+      nodeSelector:
+        gpushare: "true"
+      containers:
+      - image: registry.cn-hangzhou.aliyuncs.com/acs/k8s-gpushare-plugin:v2-1.11-aff8a23
+        name: gpushare
+        # Make this pod as Guaranteed pod which will never be evicted because of node's resource consumption.
+        command:
+          - gpushare-device-plugin-v2
+          - -logtostderr
+          - --v=5
+          - --memory-unit=GiB
+        resources:
+          limits:
+            memory: "300Mi"
+            cpu: "1"
+          requests:
+            memory: "300Mi"
+            cpu: "1"
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: k8s-host
+          mountPath: /k8s-host
+      volumes:
+      - hostPath:
+          path: /
+          type: Directory
+        name: k8s-host
