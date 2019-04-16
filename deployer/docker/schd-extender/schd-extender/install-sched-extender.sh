@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -xe
 
-export KUBECONFIG=/etc/kubernetes/admin.conf
-
 if [ -d "/k8s-host" ]; then
 	rm -rf /k8s-host/usr/local/k8s-schd-extender
 	mkdir -p /k8s-host/usr/local/k8s-schd-extender
