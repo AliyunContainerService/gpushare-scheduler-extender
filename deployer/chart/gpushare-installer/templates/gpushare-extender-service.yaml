@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gpushare-schd-extender
+  namespace: kube-system
+  labels:
+    app: gpushare
+    component: gpushare-schd-extender
+spec:
+  type: NodePort
+  ports:
+  - port: 12345
+    name: http
+    targetPort: 12345
+    nodePort: 32766
+  selector:
+    # select app=ingress-nginx pods
+    app: gpushare
+    component: gpushare-schd-extender

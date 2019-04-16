@@ -1,0 +1,38 @@
+# deployment yaml
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: gpushare-schd-extender
+  namespace: kube-system
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: gpushare
+        component: gpushare-schd-extender
+      annotations:
+        scheduler.alpha.kubernetes.io/critical-pod: ''
+    spec:
+      hostNetwork: true
+      tolerations:
+      - effect: NoSchedule
+        operator: Exists
+        key: node-role.kubernetes.io/master
+      - effect: NoSchedule
+        operator: Exists
+        key: node.cloudprovider.kubernetes.io/uninitialized
+      nodeSelector:
+         node-role.kubernetes.io/master: ""
+      serviceAccount: gpushare-schd-extender
+      containers:
+        - name: gpushare-schd-extender
+          image: registry.cn-hangzhou.aliyuncs.com/acs/k8s-gpushare-schd-extender:1.11-7d139fd
+          env:
+          - name: LOG_LEVEL
+            value: debug
+          - name: PORT
+            value: "12345"

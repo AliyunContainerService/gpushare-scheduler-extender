@@ -1,0 +1,8 @@
+# Default values for gpushare-installer.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+masterCount: 1
+
+kubeVersion: v1.12.6-aliyun.1
+
