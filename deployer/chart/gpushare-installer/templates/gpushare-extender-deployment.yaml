@@ -30,7 +30,7 @@ spec:
       serviceAccount: gpushare-schd-extender
       containers:
         - name: gpushare-schd-extender
-          image: registry.cn-hangzhou.aliyuncs.com/acs/k8s-gpushare-schd-extender:1.11-7d139fd
+          image: {{ .Values.extenderImage }}
           env:
           - name: LOG_LEVEL
             value: debug

@@ -43,7 +43,7 @@ spec:
             topologyKey: kubernetes.io/hostname
       containers:
       - name: deploy-schd
-        image: registry.cn-hangzhou.aliyuncs.com/acs/schd-extender-deployer
+        image: {{ .Values.schdInstallerImage }}
         imagePullPolicy: Always
         securityContext:
           privileged: true
