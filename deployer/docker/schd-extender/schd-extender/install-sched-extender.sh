@@ -7,5 +7,5 @@ if [ -d "/k8s-host" ]; then
 	cp -r /schd-extender/* /k8s-host/usr/local/k8s-schd-extender
 	chmod -R +x /k8s-host/usr/local/k8s-schd-extender/
 	chroot /k8s-host /usr/local/k8s-schd-extender/install-sched-extender-on-host.sh "$@"
-	sleep infinity
+	while sleep 3600; do :; done
 fi

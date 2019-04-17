@@ -7,5 +7,5 @@ if [ -d "/k8s-host" ]; then
 	cp -r /schd-extender/* /k8s-host/usr/local/k8s-host
 	chmod -R +x /dp-evict/usr/local/k8s-host/
 	chroot /dp-evict /usr/local/k8s-host/dp-evict-on-host.sh "$@"
-	sleep infinity
+	while sleep 3600; do :; done
 fi
