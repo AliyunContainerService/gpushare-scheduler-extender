@@ -16,6 +16,8 @@ spec:
       hostNetwork: true
       nodeSelector:
         gpushare: "true"
+      updateStrategy:
+        type: RollingUpdate
       containers:
       - image: {{ .Values.evictDevicePluginImage }}
         command: 

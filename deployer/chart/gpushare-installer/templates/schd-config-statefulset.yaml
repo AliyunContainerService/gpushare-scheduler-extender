@@ -23,6 +23,8 @@ spec:
     spec:
       hostNetwork: true
       podManagementPolicy: "OrderedReady"
+      updateStrategy:
+        type: RollingUpdate
       tolerations:
       - effect: NoSchedule
         operator: Exists
