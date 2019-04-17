@@ -25,7 +25,6 @@ main() {
 	public::evict::gpu-device-plugin
 
 	touch /ready
-	sleep infinity
 }
 
 main "$@"

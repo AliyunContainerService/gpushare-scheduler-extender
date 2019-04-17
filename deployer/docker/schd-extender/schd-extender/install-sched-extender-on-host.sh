@@ -58,7 +58,6 @@ main() {
 	public::deployer::sche-policy-config
 
 	touch /ready
-	sleep infinity
 }
 
 main "$@"
