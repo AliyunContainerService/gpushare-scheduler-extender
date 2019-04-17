@@ -4,6 +4,8 @@ set -e -x
 
 backup_dir="/etc/kubernetes/manifests-backup"
 
+backup_file="$backup_dir/kube-scheduler-$(date +%Y%m%d_%H%M%S).yaml"
+
 public::common::log() {
 	echo $(date +"[%Y%m%d %H:%M:%S]: ") $1
 }
@@ -13,15 +15,15 @@ public::deployer::sche-policy-config() {
 	if ! grep policy-config-file $dir/kube-scheduler.yaml; then
 		backup_dir="/etc/kubernetes/manifests-backup/$KUBE_VERSION"
 		mkdir -p $backup_dir
-		cp /etc/kubernetes/manifests/kube-scheduler.yaml $backup_dir/kube-scheduler-$(date +%Y%m%d_%H%M%S).yaml
+		cp /etc/kubernetes/manifests/kube-scheduler.yaml ${backup_file}
 		public::common::log "Backup $backup_dir/kube-scheduler-$(date +%Y%m%d_%H%M%S).yaml"
 		public::common::log "Configure shceduler extender"
 		cp /usr/local/k8s-schd-extender/scheduler-policy-config.json /etc/kubernetes/scheduler-policy-config.json
 		sed -i "/- kube-scheduler/a\ \ \ \ - --policy-config-file=/etc/kubernetes/scheduler-policy-config.json" $dir/kube-scheduler.yaml
 		# add scheduler config policy volumeMounts
-		sed -i "/  volumeMounts:/a\ \ \ \ - mountPath: /etc/kubernetes/scheduler-policy-config.json\n      name: scheduler-policy-config\n      readOnly: true" $dir/kube-apiserver.yaml
+		sed -i "/  volumeMounts:/a\ \ \ \ - mountPath: /etc/kubernetes/scheduler-policy-config.json\n      name: scheduler-policy-config\n      readOnly: true" $dir/kube-scheduler.yaml
 		# add scheduler config policy volumes
-		sed -i "/  volumes:/a \  - hostPath:\n      path: /etc/kubernetes/scheduler-policy-config.json\n      type: FileOrCreate\n    name: scheduler-policy-config" $dir/kube-apiserver.yaml
+		sed -i "/  volumes:/a \  - hostPath:\n      path: /etc/kubernetes/scheduler-policy-config.json\n      type: FileOrCreate\n    name: scheduler-policy-config" $dir/kube-scheduler.yaml
 	else
 		public::common::log "Skip the kube-scheduler config, because it's already configured extender."
 	fi
