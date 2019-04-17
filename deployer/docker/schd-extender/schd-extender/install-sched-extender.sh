@@ -6,5 +6,5 @@ if [ -d "/k8s-host" ]; then
 	mkdir -p /k8s-host/usr/local/k8s-schd-extender
 	cp -r /schd-extender/* /k8s-host/usr/local/k8s-schd-extender
 	chmod -R +x /k8s-host/usr/local/k8s-schd-extender/
-	chroot /k8s-host /usr/local/k8s-schd-extender/schd-extender-k8s-on-host.sh "$@"
+	chroot /k8s-host /usr/local/k8s-schd-extender/install-sched-extender-on-host.sh "$@"
 fi

@@ -22,6 +22,7 @@ spec:
         heritage: {{ .Release.Service }}
     spec:
       hostNetwork: true
+      podManagementPolicy: "OrderedReady"
       tolerations:
       - effect: NoSchedule
         operator: Exists
