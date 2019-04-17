@@ -5,7 +5,7 @@
 ```
 git clone https://github.com/AliyunContainerService/gpushare-scheduler-extender.git
 cd gpushare-scheduler-extender/deployer/chart
-helm install --namespace kube-system --set kubeVersion=1.11.5 --set masterCount=3 gpushare-installer
+helm install --name gpushare --namespace kube-system --set kubeVersion=1.11.5 --set masterCount=3 gpushare-installer
 ```
 
 2.Add gpushare node labels to the nodes requiring GPU sharing
