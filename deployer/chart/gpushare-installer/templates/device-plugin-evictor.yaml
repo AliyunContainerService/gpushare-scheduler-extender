@@ -13,6 +13,7 @@ spec:
         app: gpushare
         name: device-plugin-evict-ds
     spec:
+      restartPolicy: Never
       hostNetwork: true
       nodeSelector:
         gpushare: "true"
