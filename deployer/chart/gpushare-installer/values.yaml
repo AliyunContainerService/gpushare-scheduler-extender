@@ -6,7 +6,7 @@ masterCount: 3
 
 kubeVersion: v1.12.6-aliyun.1
 
-schdInstallerImage: cheyang/schd-extender-deployer:201904171740
+schdInstallerImage: cheyang/schd-extender-deployer:201904171935
 
 evictDevicePluginImage: cheyang/device-plugin-evict:201904171742
 
