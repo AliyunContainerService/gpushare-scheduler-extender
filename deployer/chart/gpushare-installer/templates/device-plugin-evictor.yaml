@@ -18,6 +18,8 @@ spec:
         gpushare: "true"
       containers:
       - image: {{ .Values.evictDevicePluginImage }}
+        command: 
+          - /dp-evict/dp-evict.sh
         name: gpushare
         # Make this pod as Guaranteed pod which will never be evicted because of node's resource consumption.
         securityContext:
