@@ -8,7 +8,7 @@ kubeVersion: v1.12.6-aliyun.1
 
 schdInstallerImage: cheyang/schd-extender-deployer:201904171935
 
-evictDevicePluginImage: cheyang/device-plugin-evict:201904172338
+evictDevicePluginImage: cheyang/device-plugin-evict:201904172342
 
 extenderImage: registry.cn-hangzhou.aliyuncs.com/acs/k8s-gpushare-schd-extender:1.11-7d139fd
 
