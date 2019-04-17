@@ -58,3 +58,5 @@ main() {
 	touch /ready
 	sleep infinity
 }
+
+main "$@"
