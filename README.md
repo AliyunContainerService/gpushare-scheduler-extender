@@ -25,7 +25,7 @@ For more details about the design of this project, please read this [Design docu
 
 ## Setup
 
-You can follow this [Installation Guide](docs/install.md).
+You can follow this [Installation Guide](docs/install.md). If you are using [Alibaba Cloud Kubernetes](https://cn.aliyun.com/product/kubernetes), please follow this [doc](deployer/README.md) to install with Helm Charts.
 
 ## User Guide
 
