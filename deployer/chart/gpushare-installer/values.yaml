@@ -1,0 +1,16 @@
+# Default values for gpushare-installer.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+masterCount: 3
+
+kubeVersion: v1.12.6-aliyun.1
+
+schdInstallerImage: cheyang/schd-extender-deployer:201904171935
+
+evictDevicePluginImage: cheyang/device-plugin-evict:201904172342
+
+extenderImage: registry.cn-hangzhou.aliyuncs.com/acs/k8s-gpushare-schd-extender:1.11-7d139fd
+
+devicePluginImage: registry.cn-hangzhou.aliyuncs.com/acs/k8s-gpushare-plugin:v2-1.11-aff8a23
+

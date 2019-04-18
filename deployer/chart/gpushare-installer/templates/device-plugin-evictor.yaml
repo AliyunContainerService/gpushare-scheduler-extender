@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: device-plugin-evict-ds
+  namespace: kube-system
+spec:
+  template:
+    metadata:
+      annotations:
+        scheduler.alpha.kubernetes.io/critical-pod: ""
+      labels:
+        component: gpushare-device-plugin
+        app: gpushare
+        name: device-plugin-evict-ds
+    spec:
+      hostNetwork: true
+      nodeSelector:
+        gpushare: "true"
+      updateStrategy:
+        type: RollingUpdate
+      containers:
+      - image: {{ .Values.evictDevicePluginImage }}
+        command: 
+          - /dp-evict/dp-evict.sh
+        name: gpushare
+        # Make this pod as Guaranteed pod which will never be evicted because of node's resource consumption.
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: k8s-host
+          mountPath: /k8s-host
+      volumes:
+      - hostPath:
+          path: /
+          type: Directory
+        name: k8s-host
