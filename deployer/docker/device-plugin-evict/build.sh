@@ -9,7 +9,7 @@ TIMESTAMP=$(date +%Y%m%d%H%M)
 cd $BASEDIR
 
 # docker build --no-cache -t $IMAGE -f $FILE $BASEDIR
-docker build --network=host -t registry.cn-shanghai.aliyuncs.com/hy_base/nvidia-device-plugin-evict:$TIMESTAMP .
-docker push registry.cn-shanghai.aliyuncs.com/hy_base/nvidia-device-plugin-evict:$TIMESTAMP
+docker build --network=host -t registry.cn-hangzhou.aliyuncs.com/acs/nvidia-device-plugin-evict:$TIMESTAMP .
+docker push registry.cn-hangzhou.aliyuncs.com/acs/nvidia-device-plugin-evict:$TIMESTAMP
 
-echo registry.cn-shanghai.aliyuncs.com/hy_base/nvidia-device-plugin-evict:$TIMESTAMP
+echo registry.cn-hangzhou.aliyuncs.com/acs/nvidia-device-plugin-evict:$TIMESTAMP
