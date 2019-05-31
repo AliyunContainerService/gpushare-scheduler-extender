@@ -1,0 +1,46 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: device-plugin-recover-ds
+  namespace: kube-system
+spec:
+  template:
+    metadata:
+      annotations:
+        scheduler.alpha.kubernetes.io/critical-pod: ""
+      labels:
+        component: gpushare-device-plugin
+        app: gpushare
+        name: device-plugin-recover-ds
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: gpushare
+                operator: DoesNotExist
+            - matchExpressions:
+              - key: aliyun.accelerator/nvidia_count
+                operator: Exists
+      # nodeSelector:
+      #   gpu-instance: "true"
+      hostNetwork: true
+      updateStrategy:
+        type: RollingUpdate
+      containers:
+      - image: {{ .Values.recoverDevicePluginImage }}
+        command: 
+          - /dp-evict/dp-recover.sh
+        name: gpushare
+        # Make this pod as Guaranteed pod which will never be recovered because of node's resource consumption.
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: k8s-host
+          mountPath: /k8s-host
+      volumes:
+      - hostPath:
+          path: /
+          type: Directory
+        name: k8s-host
