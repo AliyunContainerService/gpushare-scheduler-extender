@@ -20,11 +20,11 @@ spec:
             - matchExpressions:
               - key: gpushare
                 operator: DoesNotExist
-            - matchExpressions:
-              - key: aliyun.accelerator/nvidia_count
-                operator: Exists
-      # nodeSelector:
-      #   gpu-instance: "true"
+      #       - matchExpressions:
+      #         - key: aliyun.accelerator/nvidia_count
+      #           operator: Exists
+      nodeSelector:
+        gpu-instance: "true"
       hostNetwork: true
       updateStrategy:
         type: RollingUpdate
