@@ -25,11 +25,15 @@ public::deployer::sche-policy-config() {
     fi
 
     if [ ! -f $backup_dir/scheduler-policy-config.ori.json ];then
-        cp /etc/kubernetes/scheduler-policy-config.json $backup_dir/scheduler-policy-config.ori.json
-        public::common::log "Backup $backup_dir/scheduler-policy-config.ori.json"
+        if [ -f /etc/kubernetes/scheduler-policy-config.json ];then
+            cp /etc/kubernetes/scheduler-policy-config.json $backup_dir/scheduler-policy-config.ori.json
+            public::common::log "Backup $backup_dir/scheduler-policy-config.ori.json"
+        fi
     else
-        cp /etc/kubernetes/scheduler-policy-config.json $backup_dir/scheduler-policy-config-$TIMESTAMP.json
-        public::common::log "Backup $backup_dir/scheduler-policy-config-$TIMESTAMP.json"
+        if [ -f /etc/kubernetes/scheduler-policy-config.json ];then
+            cp /etc/kubernetes/scheduler-policy-config.json $backup_dir/scheduler-policy-config-$TIMESTAMP.json
+            public::common::log "Backup $backup_dir/scheduler-policy-config-$TIMESTAMP.json"
+        fi
     fi
 
 	public::common::log "Configure shceduler extender"
