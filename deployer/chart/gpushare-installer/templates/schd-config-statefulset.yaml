@@ -3,7 +3,8 @@ kind: StatefulSet
 metadata:
   name: {{ template "gpushare-installer.fullname" . }}
   labels:
-    app: {{ template "gpushare-installer.name" . }}
+    app: gpushare
+    name: {{ template "gpushare-installer.fullname" . }}
     chart: {{ template "gpushare-installer.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -11,15 +12,17 @@ spec:
   replicas: {{ .Values.masterCount }}
   selector:
     matchLabels:
-      app: {{ template "gpushare-installer.name" . }}
+      app: gpushare
+      name: {{ template "gpushare-installer.fullname" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels: 
-        app: {{ template "gpushare-installer.name" . }}
         chart: {{ template "gpushare-installer.chart" . }}
         release: {{ .Release.Name }}
         heritage: {{ .Release.Service }}
+        app: gpushare
+        name: {{ template "gpushare-installer.fullname" . }}
     spec:
       hostNetwork: true
       podManagementPolicy: "OrderedReady"
@@ -39,10 +42,10 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchExpressions:
-              - key: app
+              - key: name
                 operator: In
                 values:
-                - {{ template "gpushare-installer.name" . }}
+                - {{ template "gpushare-installer.fullname" . }}
             topologyKey: kubernetes.io/hostname
       containers:
       - name: deploy-schd
@@ -54,6 +57,11 @@ spec:
           - /schd-extender/install-sched-extender.sh
           - --version
           - {{ .Values.kubeVersion }}
+        env:
+          - name: NODE_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
         volumeMounts:
         - name: k8s-host
           mountPath: /k8s-host
