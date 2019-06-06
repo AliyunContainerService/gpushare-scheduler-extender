@@ -13,3 +13,5 @@ docker build -t registry.cn-hangzhou.aliyuncs.com/acs/schd-extender-deployer:$TI
 
 docker tag registry.cn-hangzhou.aliyuncs.com/acs/schd-extender-deployer:$TIMESTAMP cheyang/schd-extender-deployer:$TIMESTAMP
 
+docker push registry.cn-hangzhou.aliyuncs.com/acs/schd-extender-deployer:$TIMESTAMP
+
