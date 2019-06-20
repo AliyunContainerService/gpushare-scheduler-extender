@@ -12,6 +12,7 @@ spec:
         component: gpushare-device-plugin
         app: gpushare
         name: gpushare-device-plugin-ds
+        type: runtime
     spec:
       serviceAccount: gpushare-device-plugin
       hostNetwork: true
