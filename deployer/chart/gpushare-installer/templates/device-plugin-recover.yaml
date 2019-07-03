@@ -4,6 +4,8 @@ metadata:
   name: device-plugin-recover-ds
   namespace: kube-system
 spec:
+  updateStrategy:
+    type: RollingUpdate
   template:
     metadata:
       annotations:
@@ -26,8 +28,6 @@ spec:
       # nodeSelector:
       #   gpu-instance: "true"
       hostNetwork: true
-      updateStrategy:
-        type: RollingUpdate
       containers:
       - image: {{ .Values.recoverDevicePluginImage }}
         command: 

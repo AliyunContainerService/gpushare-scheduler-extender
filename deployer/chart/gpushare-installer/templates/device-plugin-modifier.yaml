@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
-  name: device-plugin-evict-ds
+  name: device-plugin-modify-ds
   namespace: kube-system
 spec:
   updateStrategy:
@@ -13,22 +13,25 @@ spec:
       labels:
         component: gpushare-device-plugin
         app: gpushare
-        name: device-plugin-evict-ds
+        name: device-plugin-modify-ds
     spec:
       hostNetwork: true
       nodeSelector:
         gpushare: "true"
       containers:
-      - image: {{ .Values.evictDevicePluginImage }}
-        command: 
-          - /dp-evict/dp-evict.sh
+      - image: {{ .Values.modifyDevicePluginImage }}
+        command:
+        - /dp-modify/dp-modify.sh
+        args:
+        - --request-cpu
+        - "0"
         name: gpushare
         # Make this pod as Guaranteed pod which will never be evicted because of node's resource consumption.
         securityContext:
           privileged: true
         volumeMounts:
-        - name: k8s-host
-          mountPath: /k8s-host
+          - name: k8s-host
+            mountPath: /k8s-host
       volumes:
       - hostPath:
           path: /
