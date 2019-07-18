@@ -13,13 +13,12 @@ spec:
         app: gpushare
         name: device-plugin-recover-ds
     spec:
+      nodeSelector:
+        gpushare: "false"
       affinity:
         nodeAffinity:
-          requiredDuringSchedulingRequiredDuringExecution:
+          requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
-            - matchExpressions:
-              - key: gpushare
-                operator: DoesNotExist
             - matchExpressions:
               - key: aliyun.accelerator/nvidia_count
                 operator: Exists
