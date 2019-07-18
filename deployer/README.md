@@ -47,3 +47,15 @@ cd /usr/bin/
 wget https://github.com/AliyunContainerService/gpushare-device-plugin/releases/download/v0.3.0/kubectl-inspect-gpushare
 chmod u+x /usr/bin/kubectl-inspect-gpushare
 ```
+
+6.Disable the gpushare node 
+
+```bash
+kubectl label node <target_node> gpushare=false
+```
+
+For example:
+
+```bash
+kubectl label no mynode gpushare=false
+```
