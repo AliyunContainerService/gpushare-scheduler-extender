@@ -49,14 +49,6 @@
   name = "golang.org/x/time"
   revision = "f51c12702a4d776e4c1fa9b0fabab841babae631"
 
-[[override]]
-  name = "github.com/docker/docker"
-  revision = "4f3616fb1c112e206b88cb7a9922bf49067a7756"
-
-[[override]]
-  name = "github.com/docker/distribution"
-  revision = "edc3ab29cdff8694dd6feb85cfeb4b5f1b38ed9c"
-
 [prune]
   go-tests = true
   unused-packages = true
