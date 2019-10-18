@@ -55,7 +55,7 @@ Here is the sample of the modified [kube-scheduler.yaml](../config/kube-schedule
   name: scheduler-policy-config
 ```
 
-> Notice: If your Kubernetes default scheduler is deployed as static pod, don't edit the yaml file inside /etc/kubernetes/manifest. You need to edit the yaml file outside the `/etc/kubernetes/manifest` directory.
+> Notice: If your Kubernetes default scheduler is deployed as static pod, don't edit the yaml file inside /etc/kubernetes/manifest. You need to edit the yaml file outside the `/etc/kubernetes/manifest` directory. and copy the yaml file you edited to the '/etc/kubernetes/manifest/' directory, and then kubernetes will update the default static pod with the yaml file automatically.
 
 ## 3\. Deploy Device Plugin
 
@@ -69,7 +69,7 @@ kubectl create -f device-plugin-ds.yaml
 > Notice: please remove default GPU device plugin, for example, if you are using [nvidia-device-plugin](https://github.com/NVIDIA/k8s-device-plugin/blob/v1.11/nvidia-device-plugin.yml), you can run `kubectl delete ds -n kube-system nvidia-device-plugin-daemonset` to delete.
 
 ## 4\. Add gpushare node labels to the nodes requiring GPU sharing
-
+You need to add a label "gpushare=true" to all node where you want to install device plugin because the device plugin is deamonset. 
 ```bash
 kubectl label node <target_node> gpushare=true
 ```
