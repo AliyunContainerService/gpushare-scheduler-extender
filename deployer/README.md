@@ -15,6 +15,17 @@ git clone https://github.com/AliyunContainerService/gpushare-scheduler-extender.
 cd gpushare-scheduler-extender/deployer/chart
 helm install --name gpushare --namespace kube-system --set kubeVersion=1.11.5 --set masterCount=3 gpushare-installer
 ```
+then give node labels which scheduler pods are running on,if scheduler pods are running on master,you can use the follow commands to deploy:
+```
+helm install --name gpushare-configtool --namespace kube-system configtool
+
+``` 
+if not,you should edit the follow fields in file deployer/chart/configtool/value.yaml:
+```
+nodeSelector:
+   # delete this label and add new labels	
+   node-role.kubernetes.io/master: ""
+```
 
 
 2.Add gpushare node labels to the nodes requiring GPU sharing

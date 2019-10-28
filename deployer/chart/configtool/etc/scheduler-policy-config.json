@@ -1,0 +1,20 @@
+{
+  "kind": "Policy",
+  "apiVersion": "v1",
+  "extenders": [
+    {
+      "urlPrefix": "http://127.0.0.1:32766/gpushare-scheduler",
+      "filterVerb": "filter",
+      "bindVerb":   "bind",
+      "enableHttps": false,
+      "nodeCacheCapable": true,
+      "managedResources": [
+        {
+          "name": "aliyun.com/gpu-mem",
+          "ignoredByScheduler": false
+        }
+      ],
+      "ignorable": false
+    }
+  ]
+}

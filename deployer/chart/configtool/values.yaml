@@ -1,0 +1,62 @@
+# Default values for configtool.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+
+image:
+  repository: registry.cn-hangzhou.aliyuncs.com/happy365/scheduler-extender-configtool
+  tag: v0.1
+  pullPolicy: IfNotPresent
+  #pullPolicy: Always
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+env:
+   scheduler_policy_file: "scheduler-policy-config.json"
+   scheduler_define_yaml: "kube-scheduler.yaml"
+   policy_volume_name: "scheduler-policy-with-extender"
+   check_file_interval: 3
+
+
+service: {}
+
+resources: 
+   limits:
+      cpu: 150m
+      memory: 150Mi
+   requests:
+      cpu: 100m
+      memory: 100Mi
+
+# this should give the labels of nodes which scheduler pods are running on
+# if not give some node labels,configtool also works ok,but you can get some pods status of configtool
+# are pending
+
+nodeSelector: 
+   node-role.kubernetes.io/master: ""
+
+tolerations:
+   - effect: NoSchedule
+     operator: Exists
+     key: node-role.kubernetes.io/master
+   - effect: NoSchedule
+     operator: Exists
+     key: node.cloudprovider.kubernetes.io/uninitialized
+
+# affinity defines  pod should run with other pods which have some characteristics
+# we should find the scheduler pod and define the affinity
+# in defaults,we find the scheduler pods have label component=kube-scheduler
+# if you want to change the defaults,please check the scheduler labels firstly
+  
+affinity:
+    podAffinity:
+       requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+               matchExpressions:
+                  - key: component
+                    operator: In
+                    values:
+                       - kube-scheduler
+            topologyKey: kubernetes.io/hostname

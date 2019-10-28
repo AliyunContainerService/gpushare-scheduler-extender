@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  namespace: kube-system
+  name: {{ include "configtool.fullname" . }}
+  labels:
+{{ include "configtool.labels" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "configtool.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "configtool.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          #command:
+          #  - "sleep"
+          #  - "5000"
+          env:
+            - name: SCHEDULER_POLICY_FILE_NAME
+              value: "scheduler-policy-config.json"
+            - name: SCHEDULER_DEFINE_YAML
+              value: {{ .Values.env.scheduler_define_yaml }}
+            - name: SCHEDULER_VOLUME_NAME
+              value: {{ .Values.env.policy_volume_name }}
+            - name: CHECK_FILE_INTERVAL
+              value: "{{ .Values.env.check_file_interval }}"
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - mountPath: /etc/kubernetes
+              name: kube-dir
+            - mountPath: /etc/localtime
+              name: localtime
+            - mountPath: /usr/local/k8s-schd-extender
+              name: scheduler-policy-config
+      volumes:
+        - hostPath:
+            path: /etc/kubernetes
+            type: Directory
+          name: kube-dir
+        - hostPath:
+            path: /etc/localtime
+            type: ''
+          name: localtime
+        - configMap:
+            name: scheduler-policy-config
+          name: scheduler-policy-config
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
