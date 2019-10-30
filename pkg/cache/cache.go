@@ -143,16 +143,20 @@ func (cache *SchedulerCache) GetNodeInfo(name string) (*NodeInfo, error) {
 	} else {
 		// if the existing node turn from non gpushare to gpushare
 		if (utils.GetTotalGPUMemory(n.node) <= 0 && utils.GetTotalGPUMemory(node) > 0) ||
-			(utils.GetGPUCountInNode(n.node) <= 0 && utils.GetGPUCountInNode(node) > 0) {
+			(utils.GetGPUCountInNode(n.node) <= 0 && utils.GetGPUCountInNode(node) > 0) ||
+		// if the existing node turn from gpushare to non gpushare
+			(utils.GetTotalGPUMemory(n.node) > 0 && utils.GetTotalGPUMemory(node) <= 0) ||
+			(utils.GetGPUCountInNode(n.node) > 0 && utils.GetGPUCountInNode(node) <= 0) {
 			log.Printf("debug: GetNodeInfo() need update node %s from %v to %v",
 				name,
 				n.node,
 				node)
-			n = NewNodeInfo(node)
-			cache.nodes[name] = n
+			cache.nodes[name].node = node
+			log.Printf("debug: node: %s, labels from cache after been updated: %v", n.node.Name, n.node.Labels)
+		} else {
+			log.Printf("debug: GetNodeInfo() uses the existing nodeInfo for %s", name)
 		}
 
-		log.Printf("debug: GetNodeInfo() uses the existing nodeInfo for %s", name)
 	}
 	return n, nil
 }
