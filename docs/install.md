@@ -31,8 +31,10 @@ kubectl create -f gpushare-schd-extender.yaml
 ```
 
 ## 2\. Modify scheduler configuration
-The goal is to include `/etc/kubernetes/scheduler-policy-config.json` into the scheduler configuration.
+The goal is to include `/etc/kubernetes/scheduler-policy-config.json` into the scheduler configuration (`/etc/kubernetes/manifests/kube-scheduler.yaml`).
 Here is the sample of the modified [kube-scheduler.yaml](../config/kube-scheduler.yaml)
+
+> Notice: If your Kubernetes default scheduler is deployed as static pod, don't edit the yaml file inside /etc/kubernetes/manifest. You need to edit the yaml file outside the `/etc/kubernetes/manifest` directory. and copy the yaml file you edited to the '/etc/kubernetes/manifest/' directory, and then kubernetes will update the default static pod with the yaml file automatically.
 
 ### 2.1 Add Policy config file parameter in scheduler arguments
 
@@ -54,8 +56,6 @@ Here is the sample of the modified [kube-scheduler.yaml](../config/kube-schedule
       type: FileOrCreate
   name: scheduler-policy-config
 ```
-
-> Notice: If your Kubernetes default scheduler is deployed as static pod, don't edit the yaml file inside /etc/kubernetes/manifest. You need to edit the yaml file outside the `/etc/kubernetes/manifest` directory. and copy the yaml file you edited to the '/etc/kubernetes/manifest/' directory, and then kubernetes will update the default static pod with the yaml file automatically.
 
 ## 3\. Deploy Device Plugin
 
