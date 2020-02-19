@@ -62,12 +62,42 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: status.hostIP
+          - name: PRIORITIZE_VERB
+            value: "{{ .Values.schedulerPolicyConfig.prioritizeVerb }}"
+          - name: BIND_VERB
+            value: "{{ .Values.schedulerPolicyConfig.bindVerb }}"
+          - name: FILTER_VERB
+            value: "{{ .Values.schedulerPolicyConfig.filterVerb }}"
+          - name: ENABLE_HTTPS
+            value: "{{ .Values.schedulerPolicyConfig.enableHttps }}"
+          - name: IGNORABLE
+            value: "{{ .Values.schedulerPolicyConfig.ignorable }}"
+          - name: NODE_CACHE_CAPABLE
+            value: "{{ .Values.schedulerPolicyConfig.nodeCacheCapable }}"
+          - name: URL_PREFIX
+            value: "{{ .Values.schedulerPolicyConfig.urlPrefix }}"
+          - name: WEIGHT
+            value: "{{ .Values.schedulerPolicyConfig.weight }}"
+          - name: RESOURCE_NAME
+            value: "{{ .Values.schedulerPolicyConfig.resourceName }}"
+          - name: IGNORED_BY_SCHEDULER
+            value: "{{ .Values.schedulerPolicyConfig.ignoredByScheduler }}"
+          - name: TIME_INTERVAL_FOR_CHECKING
+            value: "{{ .Values.env.timeIntervalForChecking }}"
+          - name: SCHEDULER_STATIC_POD_YAML
+            value: "{{ .Values.env.schedulerStaticPodYaml }}"
+          
         volumeMounts:
         - name: k8s-host
           mountPath: /k8s-host
+        - name: kube-dir
+          mountPath: /etc/kubernetes
       volumes:
       - hostPath:
           path: /
           type: Directory
         name: k8s-host
-
+      - hostPath:
+          path: /etc/kubernetes
+          type: Directory
+        name: kube-dir

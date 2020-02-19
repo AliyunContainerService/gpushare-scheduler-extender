@@ -91,7 +91,7 @@ main() {
 		exit 1
 	fi
 
-	public::deployer::sche-policy-config
+	#public::deployer::sche-policy-config
 
 	touch /ready
 }

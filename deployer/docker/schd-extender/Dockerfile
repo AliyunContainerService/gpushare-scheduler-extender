@@ -1,5 +1,7 @@
 FROM registry.aliyuncs.com/acs/alpine:3.3
-RUN apk add --update curl tzdata iproute2 bash &&  \
+RUN apk add --update curl tzdata iproute2 bash python3 python3-dev  && \ 
+	python3 -m ensurepip && \
+	pip3 install pyyaml && \
  	rm -rf /var/cache/apk/* && \
  	cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
  	echo "Asia/Shanghai" >  /etc/timezone && \

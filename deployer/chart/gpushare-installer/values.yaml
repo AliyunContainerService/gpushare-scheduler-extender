@@ -15,3 +15,50 @@ recoverDevicePluginImage: registry.cn-hangzhou.aliyuncs.com/acs/nvidia-device-pl
 extenderImage: registry.cn-hangzhou.aliyuncs.com/acs/k8s-gpushare-schd-extender:1.11-d170d8a
 
 devicePluginImage: registry.cn-hangzhou.aliyuncs.com/acs/k8s-gpushare-plugin:v2-1.11-aff8a23
+
+env:
+  schedulerStaticPodYaml: "/etc/kubernetes/manifests/kube-scheduler.yaml"
+  timeIntervalForChecking: "3"
+
+
+# the schedulerPolicyConfig field is used to build scheduler-policy-config.json
+# the default configuration is the same as following json:
+# {
+#  "kind": "Policy",
+#  "apiVersion": "v1",
+#  "extenders": [
+#    {
+#      "urlPrefix": "http://127.0.0.1:32766/gpushare-scheduler",
+#      "filterVerb": "filter",
+#      "bindVerb":   "bind",
+#      "enableHttps": false,
+#      "nodeCacheCapable": true,
+#      "managedResources": [
+#        {
+#          "name": "aliyun.com/gpu-mem",
+#          "ignoredByScheduler": false
+#        }
+#      ],
+#      "weight": 1,
+#      "ignorable": false
+#    }
+#  ]
+#}
+
+schedulerPolicyConfig:	
+  prioritizeVerb: "sort"
+  bindVerb: "bind"
+  filterVerb: "filter"
+  enableHttps: "false"
+  ignorable: "false"
+  nodeCacheCapable: "true"
+  urlPrefix: "http://127.0.0.1:32766/gpushare-scheduler"
+  weight: "1"
+  resourceName: "aliyun.com/gpu-mem"
+  ignoredByScheduler: "false"
+   
+  
+
+
+
+
