@@ -5,3 +5,11 @@
 ### 0.2.0
 
 * fix not recover gpu exclusive scheduling after removing gpushare 
+
+### 0.3.0
+
+* support helm v3
+
+### 0.4.0
+
+* delete env kubeVersion

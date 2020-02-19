@@ -66,34 +66,9 @@ public::deployer::sche-policy-config() {
 }
 
 main() {
-	while
-		[[ $# -gt 0 ]]
-	do
-		key="$1"
-
-		case $key in
-		--version)
-			KUBE_VERSION=$2
-			export KUBE_VERSION=${KUBE_VERSION:1}
-			shift
-			;;
-		*)
-			public::common::log "unkonw option [$key]"
-			exit 1
-			;;
-		esac
-		shift
-	done
-
-	if [ "$KUBE_VERSION" == "" ]; then
-		# Using default cidr.
-		public::common::log "KUBE_VERSION $KUBE_VERSION is not set."
-		exit 1
-	fi
-
 	public::deployer::sche-policy-config
 
 	touch /ready
 }
 
-main "$@"
+main

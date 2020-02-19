@@ -4,8 +4,6 @@
 
 masterCount: 3
 
-kubeVersion: v1.12.6-aliyun.1
-
 schdInstallerImage: registry.cn-hangzhou.aliyuncs.com/acs/schd-extender-deployer:201905310913
 
 evictDevicePluginImage: registry.cn-hangzhou.aliyuncs.com/acs/nvidia-device-plugin-evict:201905310913

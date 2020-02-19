@@ -55,8 +55,6 @@ spec:
           privileged: true
         command: 
           - /schd-extender/install-sched-extender.sh
-          - --version
-          - {{ .Values.kubeVersion }}
         env:
           - name: NODE_IP
             valueFrom:
