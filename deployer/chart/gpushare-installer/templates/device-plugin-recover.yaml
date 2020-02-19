@@ -1,9 +1,16 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: device-plugin-recover-ds
   namespace: kube-system
 spec:
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      component: gpushare-device-plugin
+      app: gpushare
+      name: device-plugin-recover-ds
   template:
     metadata:
       annotations:
@@ -25,8 +32,6 @@ spec:
       # nodeSelector:
       #   gpu-instance: "true"
       hostNetwork: true
-      updateStrategy:
-        type: RollingUpdate
       containers:
       - image: {{ .Values.recoverDevicePluginImage }}
         command: 
