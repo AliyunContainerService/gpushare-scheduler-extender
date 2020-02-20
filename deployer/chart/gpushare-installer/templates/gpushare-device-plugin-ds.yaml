@@ -1,9 +1,15 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: gpushare-device-plugin-ds
   namespace: kube-system
 spec:
+  selector:
+    matchLabels:
+      component: gpushare-device-plugin
+      app: gpushare
+      name: gpushare-device-plugin-ds
+      type: runtime
   template:
     metadata:
       annotations:

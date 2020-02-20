@@ -9,7 +9,11 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+  serviceName: gpushare-installer
+  updateStrategy:
+    type: RollingUpdate
   replicas: {{ .Values.masterCount }}
+  podManagementPolicy: "OrderedReady"
   selector:
     matchLabels:
       app: gpushare
@@ -25,9 +29,6 @@ spec:
         name: {{ template "gpushare-installer.fullname" . }}
     spec:
       hostNetwork: true
-      podManagementPolicy: "OrderedReady"
-      updateStrategy:
-        type: RollingUpdate
       tolerations:
       - effect: NoSchedule
         operator: Exists

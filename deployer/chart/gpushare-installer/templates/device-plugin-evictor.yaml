@@ -1,9 +1,16 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: device-plugin-evict-ds
   namespace: kube-system
 spec:
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      component: gpushare-device-plugin
+      app: gpushare
+      name: device-plugin-evict-ds
   template:
     metadata:
       annotations:
@@ -16,8 +23,6 @@ spec:
       hostNetwork: true
       nodeSelector:
         gpushare: "true"
-      updateStrategy:
-        type: RollingUpdate
       containers:
       - image: {{ .Values.evictDevicePluginImage }}
         command: 
