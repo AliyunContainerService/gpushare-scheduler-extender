@@ -61,7 +61,7 @@ subjects:
 # deployment yaml
 ---
 kind: Deployment
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 metadata:
   name: gpushare-schd-extender
   namespace: kube-system
@@ -69,6 +69,10 @@ spec:
   replicas: 1
   strategy:
     type: Recreate
+  selector:
+    matchLabels:
+        app: gpushare
+        component: gpushare-schd-extender
   template:
     metadata:
       labels:
