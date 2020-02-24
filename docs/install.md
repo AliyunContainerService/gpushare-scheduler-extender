@@ -77,7 +77,7 @@ kubectl label node <target_node> gpushare=true
 For example:
 
 ```bash
-kubectl label no mynode gpushare=true
+kubectl label node mynode gpushare=true
 ```
 
 ## 5\. Install Kubectl extension
