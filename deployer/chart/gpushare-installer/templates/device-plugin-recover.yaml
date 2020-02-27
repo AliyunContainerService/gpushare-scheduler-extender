@@ -33,18 +33,20 @@ spec:
       #   gpu-instance: "true"
       hostNetwork: true
       containers:
-      - image: {{ .Values.recoverDevicePluginImage }}
+      - image: "{{ .Values.images.recover.image }}:{{ .Values.images.recover.tag }}"
+        imagePullPolicy: {{ .Values.images.recover.pullPolicy }}
         command: 
-          - /dp-evict/dp-recover.sh
+          - bash 
+          - /dp-evict/dp-recover-on-host.sh
         name: gpushare
         # Make this pod as Guaranteed pod which will never be recovered because of node's resource consumption.
         securityContext:
           privileged: true
         volumeMounts:
-        - name: k8s-host
-          mountPath: /k8s-host
+        - name: kube-dir
+          mountPath: /etc/kubernetes
       volumes:
       - hostPath:
-          path: /
+          path: /etc/kubernetes
           type: Directory
-        name: k8s-host
+        name: kube-dir

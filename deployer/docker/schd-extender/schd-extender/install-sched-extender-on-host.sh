@@ -37,7 +37,7 @@ public::deployer::sche-policy-config() {
     fi
 
 	public::common::log "Configure shceduler extender"
-	cp -f /usr/local/k8s-schd-extender/scheduler-policy-config.json /etc/kubernetes/scheduler-policy-config.json
+	cp -f /schd-extender/scheduler-policy-config.json /etc/kubernetes/scheduler-policy-config.json
     sed -i 's/127.0.0.1/'"${NODE_IP}"'/g' /etc/kubernetes/scheduler-policy-config.json
     if ! grep 'deployment.kubernetes.io/revision' $dir/kube-scheduler.yaml; then
         sed -i '/scheduler.alpha.kubernetes.io\/critical-pod/a \    deployment.kubernetes.io/revision: "'"${TIMESTAMP}"'"' $dir/kube-scheduler.yaml
@@ -69,6 +69,7 @@ main() {
 	public::deployer::sche-policy-config
 
 	touch /ready
+	while sleep 3600; do :; done
 }
 
 main

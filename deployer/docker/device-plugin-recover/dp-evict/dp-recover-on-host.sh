@@ -28,6 +28,7 @@ main() {
 	public::recover::gpu-device-plugin
 
 	touch /ready
+	while sleep 3600; do :; done
 }
 
 main "$@"

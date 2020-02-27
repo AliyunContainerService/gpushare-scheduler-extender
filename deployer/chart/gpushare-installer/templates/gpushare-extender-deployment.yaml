@@ -36,7 +36,8 @@ spec:
       serviceAccount: gpushare-schd-extender
       containers:
         - name: gpushare-schd-extender
-          image: {{ .Values.extenderImage }}
+          image: "{{ .Values.images.extender.image }}:{{ .Values.images.extender.tag }}"
+          imagePullPolicy: {{ .Values.images.extender.pullPolicy }}
           env:
           - name: LOG_LEVEL
             value: debug
