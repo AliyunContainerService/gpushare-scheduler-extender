@@ -25,7 +25,8 @@ spec:
       nodeSelector:
         gpushare: "true"
       containers:
-      - image: {{ .Values.devicePluginImage }}
+      - image: "{{ .Values.images.devicePlugin.image }}:{{ .Values.images.devicePlugin.tag }}"
+        imagePullPolicy: {{ .Values.images.devicePlugin.pullPolicy }}
         name: gpushare
         # Make this pod as Guaranteed pod which will never be evicted because of node's resource consumption.
         command:

@@ -13,3 +13,7 @@
 ### 0.4.0
 
 * delete env kubeVersion
+
+### 0.5.0
+
+* change mount dir of host to /etc/kubernetes

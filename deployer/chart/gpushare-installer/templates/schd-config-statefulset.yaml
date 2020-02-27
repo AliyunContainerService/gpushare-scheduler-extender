@@ -1,10 +1,11 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "gpushare-installer.fullname" . }}
+  name: gpushare-installer
+  namespace: kube-system
   labels:
     app: gpushare
-    name: {{ template "gpushare-installer.fullname" . }}
+    name: gpushare-installer
     chart: {{ template "gpushare-installer.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -17,7 +18,7 @@ spec:
   selector:
     matchLabels:
       app: gpushare
-      name: {{ template "gpushare-installer.fullname" . }}
+      name: gpushare-installer
       release: {{ .Release.Name }}
   template:
     metadata:
@@ -26,7 +27,7 @@ spec:
         release: {{ .Release.Name }}
         heritage: {{ .Release.Service }}
         app: gpushare
-        name: {{ template "gpushare-installer.fullname" . }}
+        name: gpushare-installer
     spec:
       hostNetwork: true
       tolerations:
@@ -50,23 +51,24 @@ spec:
             topologyKey: kubernetes.io/hostname
       containers:
       - name: deploy-schd
-        image: {{ .Values.schdInstallerImage }}
-        imagePullPolicy: Always
+        image: "{{ .Values.images.installer.image }}:{{ .Values.images.installer.tag }}"
+        imagePullPolicy: {{ .Values.images.installer.pullPolicy }}
         securityContext:
           privileged: true
         command: 
-          - /schd-extender/install-sched-extender.sh
+          - bash
+          - /schd-extender/install-sched-extender-on-host.sh
         env:
           - name: NODE_IP
             valueFrom:
               fieldRef:
                 fieldPath: status.hostIP
         volumeMounts:
-        - name: k8s-host
-          mountPath: /k8s-host
+        - name: kube-dir
+          mountPath: /etc/kubernetes
       volumes:
       - hostPath:
-          path: /
+          path: /etc/kubernetes
           type: Directory
-        name: k8s-host
+        name: kube-dir
 
