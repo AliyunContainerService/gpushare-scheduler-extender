@@ -17,3 +17,7 @@
 ### 0.5.0
 
 * change mount dir of host to /etc/kubernetes
+
+### 1.0.0
+
+* change version to 1.0.0
