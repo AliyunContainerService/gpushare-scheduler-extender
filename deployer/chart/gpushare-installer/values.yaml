@@ -22,7 +22,7 @@ images:
       tag: v1.0.0-b56d26d-aliyun
       pullPolicy: IfNotPresent
    recover:
-      image: "registry.cn-beijing.aliyuncs.com/acs/nvidia-device-plugin-evict"
+      image: "registry.cn-beijing.aliyuncs.com/acs/nvidia-device-plugin-recover"
       tag: v1.0.0-b56d26d-aliyun
       pullPolicy: IfNotPresent
 
