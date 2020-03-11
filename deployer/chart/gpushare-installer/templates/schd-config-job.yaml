@@ -1,5 +1,5 @@
-apiVersion: apps/v1
-kind: StatefulSet
+apiVersion: batch/v1
+kind: Job
 metadata:
   name: gpushare-installer
   namespace: kube-system
@@ -10,16 +10,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  serviceName: gpushare-installer
-  updateStrategy:
-    type: RollingUpdate
-  replicas: {{ .Values.masterCount }}
-  podManagementPolicy: "OrderedReady"
-  selector:
-    matchLabels:
-      app: gpushare
-      name: gpushare-installer
-      release: {{ .Release.Name }}
+  parallelism: {{ .Values.masterCount }}
   template:
     metadata:
       labels: 
@@ -39,16 +30,7 @@ spec:
         key: node.cloudprovider.kubernetes.io/uninitialized
       nodeSelector:
          node-role.kubernetes.io/master: ""
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: name
-                operator: In
-                values:
-                - {{ template "gpushare-installer.fullname" . }}
-            topologyKey: kubernetes.io/hostname
+      restartPolicy: OnFailure
       containers:
       - name: deploy-schd
         image: "{{ .Values.images.installer.image }}:{{ .Values.images.installer.tag }}"
@@ -72,3 +54,13 @@ spec:
           type: Directory
         name: kube-dir
 
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: name
+                    operator: In
+                    values:
+                       - gpushare-installer
+              topologyKey: "kubernetes.io/hostname"

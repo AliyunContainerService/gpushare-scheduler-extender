@@ -17,3 +17,7 @@
 ### 0.5.0
 
 * change mount dir of host to /etc/kubernetes
+
+### 0.6.0
+
+* change statefulset to job

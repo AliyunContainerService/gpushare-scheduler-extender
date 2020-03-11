@@ -69,7 +69,7 @@ main() {
 	public::deployer::sche-policy-config
 
 	touch /ready
-	while sleep 3600; do :; done
+	#while sleep 3600; do :; done
 }
 
 main
