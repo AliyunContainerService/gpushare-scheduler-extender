@@ -44,6 +44,19 @@ func NewNodeInfo(node *v1.Node) *NodeInfo {
 	}
 }
 
+// Only update the devices
+func (n *NodeInfo) UpdateDevices(node *v1.Node) {
+	n.gpuCount = utils.GetGPUCountInNode(node)
+	n.gpuTotalMemory = utils.GetTotalGPUMemory(node)
+	if len(n.devs) == 0 && n.gpuCount > 0 {
+		devMap := map[int]*DeviceInfo{}
+		for i := 0; i < utils.GetGPUCountInNode(node); i++ {
+			devMap[i] = newDeviceInfo(i, uint(utils.GetTotalGPUMemory(node)/utils.GetGPUCountInNode(node)))
+		}
+		n.devs = devMap
+	}
+}
+
 func (n *NodeInfo) GetName() string {
 	return n.name
 }

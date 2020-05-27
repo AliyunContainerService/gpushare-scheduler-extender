@@ -152,6 +152,7 @@ func (cache *SchedulerCache) GetNodeInfo(name string) (*NodeInfo, error) {
 				n.node,
 				node)
 			cache.nodes[name].node = node
+			cache.nodes[name].UpdateDevices(node)
 			log.Printf("debug: node: %s, labels from cache after been updated: %v", n.node.Name, n.node.Labels)
 		} else {
 			log.Printf("debug: GetNodeInfo() uses the existing nodeInfo for %s", name)
