@@ -44,7 +44,7 @@ func NewNodeInfo(node *v1.Node) *NodeInfo {
 	}
 }
 
-// Only update the devices
+// Only update the devices when the length of devs is 0
 func (n *NodeInfo) UpdateDevices(node *v1.Node) {
 	n.gpuCount = utils.GetGPUCountInNode(node)
 	n.gpuTotalMemory = utils.GetTotalGPUMemory(node)
@@ -55,6 +55,7 @@ func (n *NodeInfo) UpdateDevices(node *v1.Node) {
 		}
 		n.devs = devMap
 	}
+	log.Printf("info: UpdateDevices() creates nodeInfo for %s with devs %v", node.Name, n.devs)
 }
 
 func (n *NodeInfo) GetName() string {
@@ -230,8 +231,8 @@ func (n *NodeInfo) allocateGPUID(pod *v1.Pod) (candidateDevID int, found bool) {
 	reqGPU = uint(utils.GetGPUMemoryFromPodResource(pod))
 
 	if reqGPU > uint(0) {
-		log.Printf("debug: reqGPU for pod %s in ns %s: %d", pod.Name, pod.Namespace, reqGPU)
-		log.Printf("debug: AvailableGPUs: %v in node %s", availableGPUs, n.name)
+		log.Printf("info: reqGPU for pod %s in ns %s: %d", pod.Name, pod.Namespace, reqGPU)
+		log.Printf("info: AvailableGPUs: %v in node %s", availableGPUs, n.name)
 		if len(availableGPUs) > 0 {
 			for devID := 0; devID < len(n.devs); devID++ {
 				availableGPU, ok := availableGPUs[devID]
@@ -249,7 +250,7 @@ func (n *NodeInfo) allocateGPUID(pod *v1.Pod) (candidateDevID int, found bool) {
 		}
 
 		if found {
-			log.Printf("debug: Find candidate dev id %d for pod %s in ns %s successfully.",
+			log.Printf("info: Find candidate dev id %d for pod %s in ns %s successfully.",
 				candidateDevID,
 				pod.Name,
 				pod.Namespace)
@@ -282,7 +283,7 @@ func (n *NodeInfo) getUsedGPUs() (usedGPUs map[int]uint) {
 	for _, dev := range n.devs {
 		usedGPUs[dev.idx] = dev.GetUsedGPUMemory()
 	}
-	log.Printf("debug: getUsedGPUs: %v in node %s, and devs %v", usedGPUs, n.name, n.devs)
+	log.Printf("info: getUsedGPUs: %v in node %s, and devs %v", usedGPUs, n.name, n.devs)
 	return usedGPUs
 }
 
@@ -292,6 +293,6 @@ func (n *NodeInfo) getAllGPUs() (allGPUs map[int]uint) {
 	for _, dev := range n.devs {
 		allGPUs[dev.idx] = dev.totalGPUMem
 	}
-	log.Printf("debug: getAllGPUs: %v in node %s, and dev %v", allGPUs, n.name, n.devs)
+	log.Printf("info: getAllGPUs: %v in node %s, and dev %v", allGPUs, n.name, n.devs)
 	return allGPUs
 }

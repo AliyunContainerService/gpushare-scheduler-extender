@@ -152,6 +152,7 @@ func (cache *SchedulerCache) GetNodeInfo(name string) (*NodeInfo, error) {
 				n.node,
 				node)
 			cache.nodes[name].node = node
+			// fix the scenario that the number of devices changes from 0 to an positive number
 			cache.nodes[name].UpdateDevices(node)
 			log.Printf("debug: node: %s, labels from cache after been updated: %v", n.node.Name, n.node.Labels)
 		} else {
