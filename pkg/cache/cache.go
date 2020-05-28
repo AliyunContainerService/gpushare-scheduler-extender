@@ -147,7 +147,9 @@ func (cache *SchedulerCache) GetNodeInfo(name string) (*NodeInfo, error) {
 		// 	// if the existing node turn from gpushare to non gpushare
 		// 	(utils.GetTotalGPUMemory(n.node) > 0 && utils.GetTotalGPUMemory(node) <= 0) ||
 		// 	(utils.GetGPUCountInNode(n.node) > 0 && utils.GetGPUCountInNode(node) <= 0) {
-		if len(cache.nodes[name].devs) == 0 {
+		if len(cache.nodes[name].devs) == 0 ||
+			utils.GetTotalGPUMemory(n.node) <= 0 ||
+			utils.GetGPUCountInNode(n.node) <= 0 {
 			log.Printf("info: GetNodeInfo() need update node %s from %v to %v",
 				name,
 				n.node,
