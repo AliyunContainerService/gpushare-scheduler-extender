@@ -147,18 +147,18 @@ func (cache *SchedulerCache) GetNodeInfo(name string) (*NodeInfo, error) {
 			// if the existing node turn from gpushare to non gpushare
 			(utils.GetTotalGPUMemory(n.node) > 0 && utils.GetTotalGPUMemory(node) <= 0) ||
 			(utils.GetGPUCountInNode(n.node) > 0 && utils.GetGPUCountInNode(node) <= 0) {
-			log.Printf("debug: GetNodeInfo() need update node %s from %v to %v",
+			log.Printf("info: GetNodeInfo() need update node %s from %v to %v",
 				name,
 				n.node,
 				node)
 			cache.nodes[name].node = node
 			// fix the scenario that the number of devices changes from 0 to an positive number
 			cache.nodes[name].UpdateDevices(node)
-			log.Printf("debug: node: %s, labels from cache after been updated: %v", n.node.Name, n.node.Labels)
+			log.Printf("info: node: %s, labels from cache after been updated: %v", n.node.Name, n.node.Labels)
 		} else {
-			log.Printf("debug: GetNodeInfo() uses the existing nodeInfo for %s", name)
+			log.Printf("info: GetNodeInfo() uses the existing nodeInfo for %s", name)
 		}
-
+		log.Printf("debug: node %s with devices %v", name, n.devs)
 	}
 	return n, nil
 }

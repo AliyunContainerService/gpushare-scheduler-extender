@@ -51,7 +51,7 @@ func (n *NodeInfo) UpdateDevices(node *v1.Node) {
 	if len(n.devs) == 0 && n.gpuCount > 0 {
 		devMap := map[int]*DeviceInfo{}
 		for i := 0; i < utils.GetGPUCountInNode(node); i++ {
-			devMap[i] = newDeviceInfo(i, uint(utils.GetTotalGPUMemory(node)/utils.GetGPUCountInNode(node)))
+			devMap[i] = newDeviceInfo(i, uint(n.gpuTotalMemory/n.gpuCount))
 		}
 		n.devs = devMap
 	}
