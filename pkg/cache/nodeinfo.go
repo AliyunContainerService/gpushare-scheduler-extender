@@ -169,11 +169,11 @@ func (n *NodeInfo) Allocate(clientset *kubernetes.Clientset, pod *v1.Pod) (err e
 	var newPod *v1.Pod
 	n.rwmu.Lock()
 	defer n.rwmu.Unlock()
-	log.Printf("debug: Allocate() ----Begin to allocate GPU for gpu mem for pod %s in ns %s----", pod.Name, pod.Namespace)
+	log.Printf("info: Allocate() ----Begin to allocate GPU for gpu mem for pod %s in ns %s----", pod.Name, pod.Namespace)
 	// 1. Update the pod spec
 	devId, found := n.allocateGPUID(pod)
 	if found {
-		log.Printf("debug: Allocate() 1. Allocate GPU ID %d to pod %s in ns %s.----", devId, pod.Name, pod.Namespace)
+		log.Printf("info: Allocate() 1. Allocate GPU ID %d to pod %s in ns %s.----", devId, pod.Name, pod.Namespace)
 		// newPod := utils.GetUpdatedPodEnvSpec(pod, devId, nodeInfo.GetTotalGPUMemory()/nodeInfo.GetGPUCount())
 		newPod = utils.GetUpdatedPodAnnotationSpec(pod, devId, n.GetTotalGPUMemory()/n.GetGPUCount())
 		_, err = clientset.CoreV1().Pods(newPod.Namespace).Update(newPod)
@@ -205,7 +205,7 @@ func (n *NodeInfo) Allocate(clientset *kubernetes.Clientset, pod *v1.Pod) (err e
 			ObjectMeta: metav1.ObjectMeta{Name: pod.Name, UID: pod.UID},
 			Target:     v1.ObjectReference{Kind: "Node", Name: n.name},
 		}
-		log.Printf("debug: Allocate() 2. Try to bind pod %s in %s namespace to node %s with %v",
+		log.Printf("info: Allocate() 2. Try to bind pod %s in %s namespace to node %s with %v",
 			pod.Name,
 			pod.Namespace,
 			pod.Spec.NodeName,
@@ -219,7 +219,7 @@ func (n *NodeInfo) Allocate(clientset *kubernetes.Clientset, pod *v1.Pod) (err e
 
 	// 3. update the device info if the pod is update successfully
 	if err == nil {
-		log.Printf("debug: Allocate() 3. Try to add pod %s in ns %s to dev %d",
+		log.Printf("info: Allocate() 3. Try to add pod %s in ns %s to dev %d",
 			pod.Name,
 			pod.Namespace,
 			devId)
@@ -230,7 +230,7 @@ func (n *NodeInfo) Allocate(clientset *kubernetes.Clientset, pod *v1.Pod) (err e
 			dev.addPod(newPod)
 		}
 	}
-	log.Printf("debug: Allocate() ----End to allocate GPU for gpu mem for pod %s in ns %s----", pod.Name, pod.Namespace)
+	log.Printf("info: Allocate() ----End to allocate GPU for gpu mem for pod %s in ns %s----", pod.Name, pod.Namespace)
 	return err
 }
 
