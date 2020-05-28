@@ -150,10 +150,8 @@ func (cache *SchedulerCache) GetNodeInfo(name string) (*NodeInfo, error) {
 		if len(cache.nodes[name].devs) == 0 ||
 			utils.GetTotalGPUMemory(n.node) <= 0 ||
 			utils.GetGPUCountInNode(n.node) <= 0 {
-			log.Printf("info: GetNodeInfo() need update node %s from %v to %v",
-				name,
-				n.node,
-				node)
+			log.Printf("info: GetNodeInfo() need update node %s",
+				name)
 
 			// fix the scenario that the number of devices changes from 0 to an positive number
 			cache.nodes[name].Reset(node)
