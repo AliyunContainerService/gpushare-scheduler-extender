@@ -207,13 +207,13 @@ func (c *Controller) syncPod(key string) (forget bool, err error) {
 // processNextWorkItem will read a single work item off the podQueue and
 // attempt to process it.
 func (c *Controller) processNextWorkItem() bool {
-	log.Println("begin processNextWorkItem()")
+	log.Println("debug: begin processNextWorkItem()")
 	key, quit := c.podQueue.Get()
 	if quit {
 		return false
 	}
 	defer c.podQueue.Done(key)
-	defer log.Println("end processNextWorkItem()")
+	defer log.Println("debug: end processNextWorkItem()")
 	forget, err := c.syncPod(key.(string))
 	if err == nil {
 		// log.Printf("Error syncing pods: %v", err)
