@@ -152,9 +152,9 @@ func (cache *SchedulerCache) GetNodeInfo(name string) (*NodeInfo, error) {
 				name,
 				n.node,
 				node)
-			cache.nodes[name].node = node
+
 			// fix the scenario that the number of devices changes from 0 to an positive number
-			cache.nodes[name].ResetDevices(node)
+			cache.nodes[name].Reset(node)
 			log.Printf("info: node: %s, labels from cache after been updated: %v", n.node.Name, n.node.Labels)
 		} else {
 			log.Printf("info: GetNodeInfo() uses the existing nodeInfo for %s", name)
