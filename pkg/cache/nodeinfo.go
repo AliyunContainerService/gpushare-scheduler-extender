@@ -34,6 +34,12 @@ func NewNodeInfo(node *v1.Node) *NodeInfo {
 		devMap[i] = newDeviceInfo(i, uint(utils.GetTotalGPUMemory(node)/utils.GetGPUCountInNode(node)))
 	}
 
+	if len(devMap) == 0 {
+		log.Printf("warn: node %s with nodeinfo %v has no devices",
+			node.Name,
+			node)
+	}
+
 	return &NodeInfo{
 		name:           node.Name,
 		node:           node,
@@ -45,9 +51,17 @@ func NewNodeInfo(node *v1.Node) *NodeInfo {
 }
 
 // Only update the devices when the length of devs is 0
-func (n *NodeInfo) UpdateDevices(node *v1.Node) {
+func (n *NodeInfo) ResetDevices(node *v1.Node) {
 	n.gpuCount = utils.GetGPUCountInNode(node)
 	n.gpuTotalMemory = utils.GetTotalGPUMemory(node)
+	if n.gpuCount == 0 {
+		log.Printf("warn: ResetDevices for node %s but the gpu count is 0", node.Name)
+	}
+
+	if n.gpuTotalMemory == 0 {
+		log.Printf("warn: ResetDevices for node %s but the gpu total memory is 0", node.Name)
+	}
+
 	if len(n.devs) == 0 && n.gpuCount > 0 {
 		devMap := map[int]*DeviceInfo{}
 		for i := 0; i < utils.GetGPUCountInNode(node); i++ {
@@ -55,7 +69,7 @@ func (n *NodeInfo) UpdateDevices(node *v1.Node) {
 		}
 		n.devs = devMap
 	}
-	log.Printf("info: UpdateDevices() creates nodeInfo for %s with devs %v", node.Name, n.devs)
+	log.Printf("info: ResetDevices() update nodeInfo for %s with devs %v", node.Name, n.devs)
 }
 
 func (n *NodeInfo) GetName() string {
