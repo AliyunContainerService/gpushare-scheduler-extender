@@ -74,19 +74,21 @@ go build -o $GOPATH/bin/kubectl-inspect-gpushare-v2 cmd/inspect/*.go
 - [gpushare device plugin](https://github.com/AliyunContainerService/gpushare-device-plugin.git)
 
 ## Roadmap
+
 - Integrate Nvidia MPS as the option for isolation
 - Automated Deployment for the Kubernetes cluster which is deployed by kubeadm
 - Scheduler Extener High Availablity
-
 - Generic Solution for GPU, RDMA and other devices
+
+## Adopters
+
+For a list of adopters, please check [ADOPTERS.md](docs/ADOPTERS.md). And if you are intresested in GPUShare and your, you are warmly welcome to add your info, and we will discuss our new feature design with you.
 
 ## Acknowledgments
 
 - GPU sharing solution is based on [Nvidia Docker2](https://github.com/NVIDIA/nvidia-docker), and their [gpu sharing design](https://docs.google.com/document/d/1ZgKH_K4SEfdiE_OfxQ836s4yQWxZfSjS288Tq9YIWCA/edit#heading=h.r88v2xgacqr) is our reference. The Nvidia Community is very supportive and We are very grateful.
 
 
-## Adopters
 
-For a list of users, please refer to [ADOPTERS.md](docs/ADOPTERS.md).
 
 

@@ -1,16 +1,11 @@
-# GPUShare Scheduler Adopters
+# Adopters Of GPUShare Scheduler 
 
-Below is a list of adopters of GPUShare that have publicly shared the details of their usage as well as the benifits provided by GPUShare that their business relies on. 
+Below are the adopters of project GPUShare Scheduler. If you are using GPUShare to improve the GPU usage in Kubernetes, please feel free to add yourself into the following list by a pull request. There're several phases as follow:
 
-## Users
+* **Evaluation:** Known GPUShare Scheduler, that's interesting; evaluating the features/scopes of GPUShare Scheduler
+* **Testing:** Take GPUShare Scheduler as one of candidates, testing Kubernetes cluster with GPUShare Scheduler
+* **Staging:** Decide to use GPUShare Scheduler, testing it in pre-product environment
+* **Production:** Already put GPUShare Scheduler into product environment
 
-### Productions
-
-### Testing
-
-### Success Stories
-
-## Adding a logo
-
-If you would like to add your logo to the `Users` section, add a PNG version of your logo to the docs/logos directory in this repo and submit a pull request with your change. Name the image file something that reflects your company (e.g., if your company is called Alibaba, name the image alibaba.png). We will follow up and make the change in the goharbor.io website as well.
-
+| Organization | Contact | Environment | Description of Use |
+| ------------ | ------- | ----------- | ------------------ |
