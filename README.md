@@ -82,7 +82,8 @@ go build -o $GOPATH/bin/kubectl-inspect-gpushare-v2 cmd/inspect/*.go
 
 ## Adopters
 
-For a list of adopters, please check [ADOPTERS.md](docs/ADOPTERS.md). And if you are intresested in GPUShare and your, you are warmly welcome to add your info, and we will discuss our new feature design with you.
+If you are intrested in GPUShare and would like to share your experiences with others, you are warmly welcome to add your information on [ADOPTERS.md](docs/ADOPTERS.md) page. We will continuousely discuss new requirements and feature design with you in advance.
+
 
 ## Acknowledgments
 
