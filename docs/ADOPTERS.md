@@ -13,3 +13,4 @@ Below are the adopters of project GPUShare Scheduler. If you are using GPUShare 
 | [TAL AI](ai.100tal.com) | [@asas12350](https://github.com/asas12350) | **Production** | AI Inference Service Platform|
 | [TIANCHI](tianchi.aliyun.com) | [@gaoxiaos](https://github.com/gaoxiaos) | **Staging** | AI Competition Platform|
 | [HuyaTech](www.huya.com) | [@BobLiu20](https://github.com/BobLiu20) | **Production** | HUYA AI Platform |
+| [QTT BigData](http://www.qutoutiao.net/) | [@OopsOutOfMemory](https://github.com/OopsOutOfMemory) | **Production** | QTT AI Platform |
