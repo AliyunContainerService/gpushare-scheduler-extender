@@ -15,3 +15,4 @@ Below are the adopters of project GPUShare Scheduler. If you are using GPUShare 
 | [HuyaTech](https://www.huya.com) | [@BobLiu20](https://github.com/BobLiu20) | **Production** | HUYA AI Platform |
 | [QTT BigData](http://www.qutoutiao.net/) | [@OopsOutOfMemory](https://github.com/OopsOutOfMemory) | **Production** | QTT AI Platform |
 | [Taobao](http://www.taobao.com) | [@zxthunter](https://github.com/zxthunter) | **Production** | NU Algorithm Deployment Platform |
+| [AliyunIoT](https://iot.aliyun.com/) | [@falltodis](https://github.com/falltodis) | **Production** |  IoT Edge AI Platform |
