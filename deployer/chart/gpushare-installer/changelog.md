@@ -21,3 +21,7 @@
 ### 0.6.0
 
 * change statefulset to job
+
+### 0.7.0
+
+* Support unhealthy configmap
