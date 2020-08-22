@@ -3,6 +3,8 @@ package cache
 import (
 	"fmt"
 	"log"
+	"strconv"
+	"strings"
 	"sync"
 
 	"github.com/AliyunContainerService/gpushare-scheduler-extender/pkg/utils"
@@ -283,12 +285,20 @@ func (n *NodeInfo) allocateGPUID(pod *v1.Pod) (candidateDevID int, found bool) {
 func (n *NodeInfo) getAvailableGPUs() (availableGPUs map[int]uint) {
 	allGPUs := n.getAllGPUs()
 	usedGPUs := n.getUsedGPUs()
+	unhealthyGPUs := n.getUnhealthyGPUs()
 	availableGPUs = map[int]uint{}
 	for id, totalGPUMem := range allGPUs {
 		if usedGPUMem, found := usedGPUs[id]; found {
 			availableGPUs[id] = totalGPUMem - usedGPUMem
 		}
 	}
+	log.Printf("info: available GPU list %v before removing unhealty GPUs", availableGPUs)
+	for id, _ := range unhealthyGPUs {
+		log.Printf("info: delete dev %d from availble GPU list", id)
+		delete(availableGPUs, id)
+	}
+	log.Printf("info: available GPU list %v before after removing unhealty GPUs", availableGPUs)
+
 	return availableGPUs
 }
 
@@ -310,4 +320,32 @@ func (n *NodeInfo) getAllGPUs() (allGPUs map[int]uint) {
 	}
 	log.Printf("info: getAllGPUs: %v in node %s, and dev %v", allGPUs, n.name, n.devs)
 	return allGPUs
+}
+
+// getUnhealthyGPUs get the unhealthy GPUs from configmap
+func (n *NodeInfo) getUnhealthyGPUs() (unhealthyGPUs map[int]bool) {
+	unhealthyGPUs = map[int]bool{}
+	name := fmt.Sprintf("unhealthy-%s", n.GetName())
+	log.Printf("info: try to find unhealthy node %s", name)
+	cm := getConfigMap(name)
+	if cm == nil {
+		return
+	}
+
+	if devicesStr, found := cm.Data["devices"]; found {
+		log.Printf("warn: the unhelathy devices %s", devicesStr)
+		idsStr := strings.Split(devicesStr, ",")
+		for _, sid := range idsStr {
+			id, err := strconv.Atoi(sid)
+			if err != nil {
+				log.Printf("warn: failed to parse id %s due to %v", sid, err)
+			}
+			unhealthyGPUs[id] = true
+		}
+	} else {
+		log.Println("info: skip, because there are no unhealthy devices")
+	}
+
+	return
+
 }

@@ -107,6 +107,11 @@ func NewController(clientset *kubernetes.Clientset, kubeInformerFactory kubeinfo
 	c.nodeLister = nodeInformer.Lister()
 	c.nodeInformerSynced = nodeInformer.Informer().HasSynced
 
+	// Create configMap informer
+	cmInformer := kubeInformerFactory.Core().V1().ConfigMaps()
+	cache.ConfigMapLister = cmInformer.Lister()
+	cache.ConfigMapInformerSynced = cmInformer.Informer().HasSynced
+
 	// Start informer goroutines.
 	go kubeInformerFactory.Start(stopCh)
 
@@ -125,6 +130,12 @@ func NewController(clientset *kubernetes.Clientset, kubeInformerFactory kubeinfo
 		return nil, fmt.Errorf("failed to wait for pod caches to sync")
 	} else {
 		log.Println("info: init the pod cache successfully")
+	}
+
+	if ok := clientgocache.WaitForCacheSync(stopCh, cache.ConfigMapInformerSynced); !ok {
+		return nil, fmt.Errorf("failed to wait for configmap caches to sync")
+	} else {
+		log.Println("info: init the configmap cache successfully")
 	}
 
 	log.Println("info: end to wait for cache")
