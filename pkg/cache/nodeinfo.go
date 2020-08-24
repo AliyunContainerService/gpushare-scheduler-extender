@@ -297,7 +297,7 @@ func (n *NodeInfo) getAvailableGPUs() (availableGPUs map[int]uint) {
 		log.Printf("info: delete dev %d from availble GPU list", id)
 		delete(availableGPUs, id)
 	}
-	log.Printf("info: available GPU list %v before after removing unhealty GPUs", availableGPUs)
+	log.Printf("info: available GPU list %v after removing unhealty GPUs", availableGPUs)
 
 	return availableGPUs
 }
