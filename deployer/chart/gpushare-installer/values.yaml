@@ -7,7 +7,7 @@ masterCount: 3
 images:
    extender:
       image: "registry.cn-beijing.aliyuncs.com/acs/k8s-gpushare-schd-extender"
-      tag: v1.0.0-65213f7-aliyun
+      tag: v1.0.0-13b7320-aliyun
       pullPolicy: IfNotPresent
    installer:
       image: "registry.cn-beijing.aliyuncs.com/acs/schd-extender-deployer"
