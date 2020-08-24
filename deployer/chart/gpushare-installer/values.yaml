@@ -11,7 +11,7 @@ images:
       pullPolicy: IfNotPresent
    installer:
       image: "registry.cn-beijing.aliyuncs.com/acs/schd-extender-deployer"
-      tag: v1.0.0-65213f7-aliyun
+      tag: v1.0.0-b56d26d-aliyun
       pullPolicy: IfNotPresent
    devicePlugin:
       image: "registry.cn-beijing.aliyuncs.com/acs/k8s-gpushare-plugin"
@@ -19,10 +19,11 @@ images:
       pullPolicy: IfNotPresent
    evictor:
       image: "registry.cn-beijing.aliyuncs.com/acs/nvidia-device-plugin-evict"
-      tag: v1.0.0-65213f7-aliyun
+      tag: v1.0.0-b56d26d-aliyun
       pullPolicy: IfNotPresent
    recover:
       image: "registry.cn-beijing.aliyuncs.com/acs/nvidia-device-plugin-recover"
-      tag: v1.0.0-65213f7-aliyun
+      tag: v1.0.0-b56d26d-aliyun
       pullPolicy: IfNotPresent
+
 
