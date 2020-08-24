@@ -332,8 +332,8 @@ func (n *NodeInfo) getUnhealthyGPUs() (unhealthyGPUs map[int]bool) {
 		return
 	}
 
-	if devicesStr, found := cm.Data["devices"]; found {
-		log.Printf("warn: the unhelathy devices %s", devicesStr)
+	if devicesStr, found := cm.Data["gpus"]; found {
+		log.Printf("warn: the unhelathy gpus %s", devicesStr)
 		idsStr := strings.Split(devicesStr, ",")
 		for _, sid := range idsStr {
 			id, err := strconv.Atoi(sid)
@@ -343,7 +343,7 @@ func (n *NodeInfo) getUnhealthyGPUs() (unhealthyGPUs map[int]bool) {
 			unhealthyGPUs[id] = true
 		}
 	} else {
-		log.Println("info: skip, because there are no unhealthy devices")
+		log.Println("info: skip, because there are no unhealthy gpus")
 	}
 
 	return
