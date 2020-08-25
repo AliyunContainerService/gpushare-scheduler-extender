@@ -325,7 +325,7 @@ func (n *NodeInfo) getAllGPUs() (allGPUs map[int]uint) {
 // getUnhealthyGPUs get the unhealthy GPUs from configmap
 func (n *NodeInfo) getUnhealthyGPUs() (unhealthyGPUs map[int]bool) {
 	unhealthyGPUs = map[int]bool{}
-	name := fmt.Sprintf("unhealthy-%s", n.GetName())
+	name := fmt.Sprintf("unhealthy-gpu-%s", n.GetName())
 	log.Printf("info: try to find unhealthy node %s", name)
 	cm := getConfigMap(name)
 	if cm == nil {
