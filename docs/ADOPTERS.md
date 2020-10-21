@@ -18,3 +18,4 @@ Below are the adopters of project GPUShare Scheduler. If you are using GPUShare 
 | [Heuritech](http://www.heuritech.com) | [@heuritech](https://github.com/heuritech) | **Production** | AI Inference for Fashion |
 | [AliyunIoT](https://iot.aliyun.com/) | [@falltodis](https://github.com/falltodis) | **Production** |  IoT Edge AI Platform |
 | [Jiangsu Telecom](https://wapjs.189.cn/) | [@yangyuliufeng](https://github.com/yangyuliufeng) | **Production** |  AI Platform on k8s |
+| [Aliyun Industry Brain](https://et.aliyun.com/brain/industry/) | [@xlk23](https://github.com/xlk23) | **Production** |  EPIC Platform |
