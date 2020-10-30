@@ -9,6 +9,7 @@ Below are the adopters of project GPUShare Scheduler. If you are using GPUShare 
 
 | Organization | Contact | Phases      | Description of Use |
 | ------------ | ------- | ----------- | ------------------ |
+| [JianPei](http://www.jianpeicn.com/) | [@lisongtao716](https://github.com/lisongtao716) | Testing | Medical image analysis |
 | [Unisound](https://www.unisound.com/) | [@xieydd](https://github.com/xieydd) | Testing | Unisound ATLAS AI Training Platform |
 | [TAL AI](https://ai.100tal.com) | [@asas12350](https://github.com/asas12350) | **Production** | AI Inference Service Platform|
 | [TIANCHI](https://tianchi.aliyun.com) | [@gaoxiaos](https://github.com/gaoxiaos) | **Staging** | AI Competition Platform|
