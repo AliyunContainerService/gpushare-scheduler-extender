@@ -21,4 +21,5 @@ Below are the adopters of project GPUShare Scheduler. If you are using GPUShare 
 | [Jiangsu Telecom](https://wapjs.189.cn/) | [@yangyuliufeng](https://github.com/yangyuliufeng) | **Production** |  AI Platform on k8s |
 | [Aliyun Industry Brain](https://et.aliyun.com/brain/industry) | [@xlk23](https://github.com/xlk23) | **Production** |  EPIC Platform |
 | [Weibo](https://www.weibo.com) | [@phoenixwu0229](https://github.com/phoenixwu0229) | **Production** |  Weibo ML Platform |
+| [Zyb](http://www.zuoyebang.com) | [@xkos](https://github.com/xkos) | **Production** |  AI Platform on k8s |
 
