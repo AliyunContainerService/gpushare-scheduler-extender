@@ -24,3 +24,4 @@ Below are the adopters of project GPUShare Scheduler. If you are using GPUShare 
 | [Weibo](https://www.weibo.com) | [@phoenixwu0229](https://github.com/phoenixwu0229) | **Production** |  Weibo ML Platform |
 | [Zuo Ye Bang](http://www.zuoyebang.com) | [@xkos](https://github.com/xkos) | **Production** |  AI Platform on k8s |
 | [Hellobike](https://www.helloglobal.com) | [@gwl-wolf](https://github.com/gwl-wolf) | **Production** | AIBrain Platform |
+| [Gomo](https://www.gomo.com) | [@cxxx](https://github.com/cxxx) | **Production** | Image conversion |
