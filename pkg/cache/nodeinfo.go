@@ -7,8 +7,11 @@ import (
 	"strings"
 	"sync"
 
+	v1 "k8s.io/api/core/v1"
+
+	"k8s.io/apimachinery/pkg/types"
+
 	"github.com/AliyunContainerService/gpushare-scheduler-extender/pkg/utils"
-	"k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 )
@@ -177,8 +180,13 @@ func (n *NodeInfo) Allocate(clientset *kubernetes.Clientset, pod *v1.Pod) (err e
 	if found {
 		log.Printf("info: Allocate() 1. Allocate GPU ID %d to pod %s in ns %s.----", devId, pod.Name, pod.Namespace)
 		// newPod := utils.GetUpdatedPodEnvSpec(pod, devId, nodeInfo.GetTotalGPUMemory()/nodeInfo.GetGPUCount())
-		newPod = utils.GetUpdatedPodAnnotationSpec(pod, devId, n.GetTotalGPUMemory()/n.GetGPUCount())
-		_, err = clientset.CoreV1().Pods(newPod.Namespace).Update(newPod)
+		//newPod = utils.GetUpdatedPodAnnotationSpec(pod, devId, n.GetTotalGPUMemory()/n.GetGPUCount())
+		patchedAnnotationBytes, err := utils.PatchPodAnnotationSpec(pod, devId, n.GetTotalGPUMemory()/n.GetGPUCount())
+		if err != nil {
+			return fmt.Errorf("failed to generate patched annotations,reason: %v", err)
+		}
+		newPod, err = clientset.CoreV1().Pods(pod.Namespace).Patch(pod.Name, types.StrategicMergePatchType, patchedAnnotationBytes)
+		//_, err = clientset.CoreV1().Pods(newPod.Namespace).Update(newPod)
 		if err != nil {
 			// the object has been modified; please apply your changes to the latest version and try again
 			if err.Error() == OptimisticLockErrorMsg {
@@ -188,17 +196,19 @@ func (n *NodeInfo) Allocate(clientset *kubernetes.Clientset, pod *v1.Pod) (err e
 					return err
 				}
 				// newPod = utils.GetUpdatedPodEnvSpec(pod, devId, nodeInfo.GetTotalGPUMemory()/nodeInfo.GetGPUCount())
-				newPod = utils.GetUpdatedPodAnnotationSpec(pod, devId, n.GetTotalGPUMemory()/n.GetGPUCount())
-				_, err = clientset.CoreV1().Pods(newPod.Namespace).Update(newPod)
+				//newPod = utils.GetUpdatedPodAnnotationSpec(pod, devId, n.GetTotalGPUMemory()/n.GetGPUCount())
+				//_, err = clientset.CoreV1().Pods(newPod.Namespace).Update(newPod)
+				newPod, err = clientset.CoreV1().Pods(pod.Namespace).Patch(pod.Name, types.StrategicMergePatchType, patchedAnnotationBytes)
 				if err != nil {
 					return err
 				}
 			} else {
+				log.Printf("failed to patch pod %v", pod)
 				return err
 			}
 		}
 	} else {
-		err = fmt.Errorf("The node %s can't place the pod %s in ns %s", pod.Spec.NodeName, pod.Name, pod.Namespace)
+		err = fmt.Errorf("The node %s can't place the pod %s in ns %s,and the pod spec is %v", pod.Spec.NodeName, pod.Name, pod.Namespace, pod)
 	}
 
 	// 2. Bind the pod to the node
