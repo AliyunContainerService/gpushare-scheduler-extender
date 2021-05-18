@@ -1,8 +1,9 @@
 package utils
 
 const (
-	ResourceName = "aliyun.com/gpu-mem"
-	CountName    = "aliyun.com/gpu-count"
+	ResourceName   = "aliyun.com/gpu-mem"
+	CountName      = "aliyun.com/gpu-count"
+	ResourceStatus = "aliyun.com/gpu-dev-"
 
 	EnvNVGPU              = "NVIDIA_VISIBLE_DEVICES"
 	EnvResourceIndex      = "ALIYUN_COM_GPU_MEM_IDX"
