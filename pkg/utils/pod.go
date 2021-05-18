@@ -1,12 +1,12 @@
 package utils
 
 import (
+	"encoding/json"
 	"fmt"
+	v1 "k8s.io/api/core/v1"
 	"log"
 	"strconv"
 	"time"
-
-	"k8s.io/api/core/v1"
 )
 
 // AssignedNonTerminatedPod selects pods that are assigned and non-terminal (scheduled and running).
@@ -203,4 +203,17 @@ func GetUpdatedPodAnnotationSpec(oldPod *v1.Pod, devId int, totalGPUMemByDev int
 	newPod.ObjectMeta.Annotations[EnvResourceAssumeTime] = fmt.Sprintf("%d", now.UnixNano())
 
 	return newPod
+}
+
+func PatchPodAnnotationSpec(oldPod *v1.Pod, devId int, totalGPUMemByDev int) ([]byte, error) {
+	now := time.Now()
+	patchAnnotations := map[string]interface{}{
+		"metadata": map[string]map[string]string{"annotations": {
+			EnvResourceIndex:      fmt.Sprintf("%d", devId),
+			EnvResourceByDev:      fmt.Sprintf("%d", totalGPUMemByDev),
+			EnvResourceByPod:      fmt.Sprintf("%d", GetGPUMemoryFromPodResource(oldPod)),
+			EnvAssignedFlag:       "false",
+			EnvResourceAssumeTime: fmt.Sprintf("%d", now.UnixNano()),
+		}}}
+	return json.Marshal(patchAnnotations)
 }
