@@ -33,10 +33,9 @@ type NodeInfo struct {
 }
 
 type DeviceIndexAvailableMem struct {
-	Idx  int
+	Idx          int
 	AvailableMem uint
 }
-
 
 // Create Node Level
 func NewNodeInfo(node *v1.Node) *NodeInfo {
@@ -259,12 +258,15 @@ func (n *NodeInfo) getPodReplicaName(podNs string, podName string) string {
 	var buffer bytes.Buffer
 	podNameItems := strings.Split(podName, "-")
 	buffer.WriteString(podNs)
-	for i := 0; i < len(podNameItems)-1; i++ {
-		buffer.WriteString(podNameItems[i])
+	if len(podNameItems) > 1 {
+		for i := 0; i < len(podNameItems)-1; i++ {
+			buffer.WriteString(podNameItems[i])
+		}
+	} else {
+		buffer.WriteString(podNameItems[0])
 	}
 	return buffer.String()
 }
-
 
 // 判断 当前GPU设备是否包含相同的副本
 func (n *NodeInfo) deviceContainsSamePodReplica(deviceInfo *DeviceInfo, podNs string, podName string) bool {
@@ -305,7 +307,6 @@ func (n *NodeInfo) getPodSpecialGPUIdx(pod *v1.Pod) (found bool, specialIdx int)
 	return found, specialIdx
 }
 
-
 // allocate the GPU ID to the pod
 func (n *NodeInfo) allocateGPUID(pod *v1.Pod) (candidateDevID int, found bool) {
 
@@ -320,15 +321,15 @@ func (n *NodeInfo) allocateGPUID(pod *v1.Pod) (candidateDevID int, found bool) {
 		log.Printf("info: reqGPU for pod %s in ns %s: %d", pod.Name, pod.Namespace, reqGPU)
 		log.Printf("info: AvailableGPUs: %v in node %s", availableGPUs, n.name)
 		if len(availableGPUs) > 0 {
-			var availableMemList []DeviceIndexAvailableMem  // 所有可用的设备列表
-			var availableAndNotContainsReplicaList []DeviceIndexAvailableMem  // 所有可用的，并且未包含相同副本pod的
+			var availableMemList []DeviceIndexAvailableMem                   // 所有可用的设备列表
+			var availableAndNotContainsReplicaList []DeviceIndexAvailableMem // 所有可用的，并且未包含相同副本pod的
 
-			useSpecialGPU, specialGPUIdx := n.getPodSpecialGPUIdx(pod)  // 检查是否指定了固定的gpu设备
+			useSpecialGPU, specialGPUIdx := n.getPodSpecialGPUIdx(pod) // 检查是否指定了固定的gpu设备
 
 			for devID := 0; devID < len(n.devs); devID++ {
 				availableGPU, ok := availableGPUs[devID]
 				if ok {
-					if availableGPU >= reqGPU {  // 满足设备可用显存大小
+					if availableGPU >= reqGPU { // 满足设备可用显存大小
 						if useSpecialGPU {
 							// 指定 gpu设备index
 							if specialGPUIdx == devID {
@@ -354,7 +355,7 @@ func (n *NodeInfo) allocateGPUID(pod *v1.Pod) (candidateDevID int, found bool) {
 				sort.Slice(availableAndNotContainsReplicaList, func(i, j int) bool {
 					return availableAndNotContainsReplicaList[i].AvailableMem < availableAndNotContainsReplicaList[j].AvailableMem
 				})
-				candidateDevID = availableAndNotContainsReplicaList[len(availableAndNotContainsReplicaList)-1].Idx  // 最空闲的一个
+				candidateDevID = availableAndNotContainsReplicaList[len(availableAndNotContainsReplicaList)-1].Idx // 最空闲的一个
 				found = true
 			}
 			// 如果通过以上策略没有找到设备，则找出一个availableGPU最大的一个，最空闲的一个
@@ -362,7 +363,7 @@ func (n *NodeInfo) allocateGPUID(pod *v1.Pod) (candidateDevID int, found bool) {
 				sort.Slice(availableMemList, func(i, j int) bool {
 					return availableMemList[i].AvailableMem < availableMemList[j].AvailableMem
 				})
-				candidateDevID = availableMemList[len(availableMemList)-1].Idx  // 最空闲的一个
+				candidateDevID = availableMemList[len(availableMemList)-1].Idx // 最空闲的一个
 				found = true
 			}
 		}
