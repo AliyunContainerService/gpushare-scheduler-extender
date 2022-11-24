@@ -27,3 +27,4 @@ Below are the adopters of project GPUShare Scheduler. If you are using GPUShare 
 | [Gomo](https://www.gomo.com) | [@cxxx](https://github.com/cxxx) | **Production** | Image conversion |
 | [Qihoo 360](https://www.360.cn) | [@70data](https://github.com/70data) | **Production** | Private Cloud Platform on K8s |
 | [DIDI](https://www.didiglobal.com/) | [@tongchao199](https://github.com/tongchao199) | **Production** | AI Experimental Environment Service <br> AI Inference Service |
+| [Mango TV](https://www.mgtv.com) | [@ftx0day](https://github.com/ftx0day) | **Production** | Mango CloudNative AI Platform |
