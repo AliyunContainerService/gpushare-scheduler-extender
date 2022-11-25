@@ -231,7 +231,7 @@ func (c *Controller) processNextWorkItem() bool {
 		if forget {
 			c.podQueue.Forget(key)
 		}
-		return false
+		return true
 	}
 
 	log.Printf("Error syncing pods: %v", err)
