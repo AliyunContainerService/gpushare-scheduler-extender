@@ -1,0 +1,5 @@
+FROM alpine
+
+COPY ./bin/gpushare-sche-extender /usr/bin/gpushare-sche-extender
+
+CMD ["gpushare-sche-extender"]

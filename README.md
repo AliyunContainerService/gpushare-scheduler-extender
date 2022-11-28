@@ -14,7 +14,7 @@ Now there is a GPU sharing solution on native Kubernetes: it is based on schedul
 ## Prerequisites
 
 - Kubernetes 1.11+
-- golang 1.10+
+- golang 1.19+
 - NVIDIA drivers ~= 361.93
 - Nvidia-docker version > 2.0 (see how to [install](https://github.com/NVIDIA/nvidia-docker) and it's [prerequisites](https://github.com/nvidia/nvidia-docker/wiki/Installation-\(version-2.0\)#prerequisites))
 - Docker configured with Nvidia as the [default runtime](https://github.com/NVIDIA/nvidia-docker/wiki/Advanced-topics#default-runtime).
@@ -37,7 +37,7 @@ You can check this [User Guide](docs/userguide.md).
 
 ```bash
 git clone https://github.com/AliyunContainerService/gpushare-scheduler-extender.git && cd gpushare-scheduler-extender
-docker build -t cheyang/gpushare-scheduler-extender .
+make build-image
 ```
 
 ### Device Plugin

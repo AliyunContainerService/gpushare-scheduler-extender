@@ -1,8 +1,7 @@
 package cache
 
 import (
-	"log"
-
+	"github.com/AliyunContainerService/gpushare-scheduler-extender/pkg/log"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	corelisters "k8s.io/client-go/listers/core/v1"
@@ -24,7 +23,7 @@ func getConfigMap(name string) *v1.ConfigMap {
 	// sync things up.
 	if err != nil {
 		if !apierrors.IsNotFound(err) {
-			log.Printf("warn: find configmap with error: %v", err)
+			log.V(10).Info("warn: find configmap with error: %v", err)
 			utilruntime.HandleError(err)
 		}
 		return nil
