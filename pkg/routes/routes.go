@@ -4,15 +4,16 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/AliyunContainerService/gpushare-scheduler-extender/pkg/log"
 	"io"
-	"log"
 	"net/http"
+	"time"
 
 	"github.com/julienschmidt/httprouter"
 
 	"github.com/AliyunContainerService/gpushare-scheduler-extender/pkg/scheduler"
 
-	schedulerapi "k8s.io/kubernetes/pkg/scheduler/api"
+	schedulerapi "k8s.io/kube-scheduler/extender/v1"
 )
 
 const (
@@ -42,7 +43,7 @@ func InspectRoute(inspect *scheduler.Inspect) httprouter.Handle {
 
 		if resultBody, err := json.Marshal(result); err != nil {
 			// panic(err)
-			log.Printf("warn: Failed due to %v", err)
+			log.V(3).Info("warn: Failed due to %v", err)
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusInternalServerError)
 			errMsg := fmt.Sprintf("{'error':'%s'}", err.Error())
@@ -64,33 +65,31 @@ func PredicateRoute(predicate *scheduler.Predicate) httprouter.Handle {
 
 		var buf bytes.Buffer
 		body := io.TeeReader(r.Body, &buf)
-		// log.Print("info: ", predicate.Name, " ExtenderArgs = ", buf.String())
 
 		var extenderArgs schedulerapi.ExtenderArgs
 		var extenderFilterResult *schedulerapi.ExtenderFilterResult
 
 		if err := json.NewDecoder(body).Decode(&extenderArgs); err != nil {
-
-			log.Printf("warn: failed to parse request due to error %v", err)
+			log.V(3).Info("warn: failed to parse request due to error %v", err)
 			extenderFilterResult = &schedulerapi.ExtenderFilterResult{
 				Nodes:       nil,
 				FailedNodes: nil,
 				Error:       err.Error(),
 			}
 		} else {
-			log.Printf("debug: gpusharingfilter ExtenderArgs =%v", extenderArgs)
-			extenderFilterResult = predicate.Handler(extenderArgs)
+			log.V(90).Info("debug: gpusharingfilter ExtenderArgs =%v", extenderArgs)
+			extenderFilterResult = predicate.Handler(&extenderArgs)
 		}
 
 		if resultBody, err := json.Marshal(extenderFilterResult); err != nil {
 			// panic(err)
-			log.Printf("warn: Failed due to %v", err)
+			log.V(3).Info("warn: Failed due to %v", err)
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusInternalServerError)
 			errMsg := fmt.Sprintf("{'error':'%s'}", err.Error())
 			w.Write([]byte(errMsg))
 		} else {
-			log.Print("info: ", predicate.Name, " extenderFilterResult = ", string(resultBody))
+			log.V(100).Info("predicate: %s,  extenderFilterResult = %s ", predicate.Name, resultBody)
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
 			w.Write(resultBody)
@@ -106,7 +105,6 @@ func BindRoute(bind *scheduler.Bind) httprouter.Handle {
 		// defer mu.Unlock()
 		var buf bytes.Buffer
 		body := io.TeeReader(r.Body, &buf)
-		// log.Print("info: extenderBindingArgs = ", buf.String())
 
 		var extenderBindingArgs schedulerapi.ExtenderBindingArgs
 		var extenderBindingResult *schedulerapi.ExtenderBindingResult
@@ -118,7 +116,7 @@ func BindRoute(bind *scheduler.Bind) httprouter.Handle {
 			}
 			failed = true
 		} else {
-			log.Printf("debug: gpusharingBind ExtenderArgs =%v", extenderBindingArgs)
+			log.V(10).Info("debug: gpusharingBind ExtenderArgs =%v", extenderBindingArgs)
 			extenderBindingResult = bind.Handler(extenderBindingArgs)
 		}
 
@@ -127,14 +125,14 @@ func BindRoute(bind *scheduler.Bind) httprouter.Handle {
 		}
 
 		if resultBody, err := json.Marshal(extenderBindingResult); err != nil {
-			log.Printf("warn: Failed due to %v", err)
+			log.V(3).Info("warn: Failed due to %v", err)
 			// panic(err)
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusInternalServerError)
 			errMsg := fmt.Sprintf("{'error':'%s'}", err.Error())
 			w.Write([]byte(errMsg))
 		} else {
-			log.Print("info: extenderBindingResult = ", string(resultBody))
+			log.V(3).Info("info: extenderBindingResult = ", string(resultBody))
 			w.Header().Set("Content-Type", "application/json")
 			if failed {
 				w.WriteHeader(http.StatusInternalServerError)
@@ -157,9 +155,10 @@ func AddVersion(router *httprouter.Router) {
 
 func DebugLogging(h httprouter.Handle, path string) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-		log.Print("debug: ", path, " request body = ", r.Body)
+		log.V(90).Info("path: %s, request body = %s", path, r.Body)
+		startTime := time.Now()
 		h(w, r, p)
-		log.Print("debug: ", path, " response=", w)
+		log.V(90).Info("path: %s, response: %v, cost_time: %v", path, w, time.Now().Sub(startTime))
 	}
 }
 
@@ -170,7 +169,7 @@ func AddPredicate(router *httprouter.Router, predicate *scheduler.Predicate) {
 
 func AddBind(router *httprouter.Router, bind *scheduler.Bind) {
 	if handle, _, _ := router.Lookup("POST", bindPrefix); handle != nil {
-		log.Print("warning: AddBind was called more then once!")
+		log.V(3).Info("warning: AddBind was called more then once!")
 	} else {
 		router.POST(bindPrefix, DebugLogging(BindRoute(bind), bindPrefix))
 	}

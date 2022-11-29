@@ -1,8 +1,9 @@
 package scheduler
 
 import (
+	"context"
 	"fmt"
-	"log"
+	"github.com/AliyunContainerService/gpushare-scheduler-extender/pkg/log"
 
 	"github.com/AliyunContainerService/gpushare-scheduler-extender/pkg/cache"
 	"k8s.io/api/core/v1"
@@ -16,24 +17,24 @@ const (
 	OptimisticLockErrorMsg = "the object has been modified; please apply your changes to the latest version and try again"
 )
 
-func NewGPUShareBind(clientset *kubernetes.Clientset, c *cache.SchedulerCache) *Bind {
+func NewGPUShareBind(ctx context.Context, clientset *kubernetes.Clientset, c *cache.SchedulerCache) *Bind {
 	return &Bind{
 		Name: "gpusharingbinding",
 		Func: func(name string, namespace string, podUID types.UID, node string, c *cache.SchedulerCache) error {
-			pod, err := getPod(name, namespace, podUID, clientset, c)
+			pod, err := getPod(ctx, name, namespace, podUID, clientset, c)
 			if err != nil {
-				log.Printf("warn: Failed to handle pod %s in ns %s due to error %v", name, namespace, err)
+				log.V(9).Info("warn: Failed to handle pod %s in ns %s due to error %v", name, namespace, err)
 				return err
 			}
 
 			nodeInfo, err := c.GetNodeInfo(node)
 			if err != nil {
-				log.Printf("warn: Failed to handle pod %s in ns %s due to error %v", name, namespace, err)
+				log.V(9).Info("warn: Failed to handle pod %s in ns %s due to error %v", name, namespace, err)
 				return err
 			}
 			err = nodeInfo.Allocate(clientset, pod)
 			if err != nil {
-				log.Printf("warn: Failed to handle pod %s in ns %s due to error %v", name, namespace, err)
+				log.V(9).Info("warn: Failed to handle pod %s in ns %s due to error %v", name, namespace, err)
 				return err
 			}
 			return nil
@@ -42,10 +43,10 @@ func NewGPUShareBind(clientset *kubernetes.Clientset, c *cache.SchedulerCache) *
 	}
 }
 
-func getPod(name string, namespace string, podUID types.UID, clientset *kubernetes.Clientset, c *cache.SchedulerCache) (pod *v1.Pod, err error) {
+func getPod(ctx context.Context, name string, namespace string, podUID types.UID, clientset *kubernetes.Clientset, c *cache.SchedulerCache) (pod *v1.Pod, err error) {
 	pod, err = c.GetPod(name, namespace)
 	if errors.IsNotFound(err) {
-		pod, err = clientset.CoreV1().Pods(namespace).Get(name, metav1.GetOptions{})
+		pod, err = clientset.CoreV1().Pods(namespace).Get(ctx, name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
@@ -53,7 +54,7 @@ func getPod(name string, namespace string, podUID types.UID, clientset *kubernet
 		return nil, err
 	}
 	if pod.UID != podUID {
-		pod, err = clientset.CoreV1().Pods(namespace).Get(name, metav1.GetOptions{})
+		pod, err = clientset.CoreV1().Pods(namespace).Get(ctx, name, metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}
