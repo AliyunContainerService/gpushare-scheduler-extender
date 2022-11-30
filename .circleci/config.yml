@@ -1,22 +1,38 @@
-version: 2
+version: 2.1
+
 jobs:
   build:
+    working_directory: ~/repo
     docker:
-    - image: circleci/golang:1.10
-    working_directory: /go/src/github.com/AliyunContainerService/gpushare-scheduler-extender
+      - image: cimg/go:1.19.3
     steps:
-    - checkout
-    - setup_remote_docker:
-          docker_layer_caching: false
-    - run:
-        name: run tests
-        command: |
-          test -z $(go fmt ./...)
-          go vet ./...
-          go test -race -v ./...
-    - run: docker build -t acs/gpushare-scheduler-extender:$CIRCLE_BUILD_NUM .
-    - run:
-        name: codecov
-        command: |
-          go test -race -coverprofile=coverage.txt -covermode=atomic ./...
-          bash <(curl -s https://codecov.io/bash)
+      - checkout
+      - restore_cache:
+          keys:
+            - go-mod-v4-{{ checksum "go.sum" }}
+      - run:
+          name: Install Dependencies
+          command: go mod download
+      - save_cache:
+          key: go-mod-v4-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
+      - run:
+          name: Run tests
+          command: |
+            mkdir -p /tmp/test-reports
+            gotestsum --junitfile /tmp/test-reports/unit-tests.xml
+      - store_test_results:
+          path: /tmp/test-reports
+      - run:
+          name: binary
+          command: |
+            make build-server
+
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+workflows:
+  sample: # This is the name of the workflow, feel free to change it to better match your workflow.
+    # Inside the workflow, you define the jobs you want to run.
+    jobs:
+      - build
