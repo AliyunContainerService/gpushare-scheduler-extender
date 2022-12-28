@@ -132,7 +132,7 @@ func BindRoute(bind *scheduler.Bind) httprouter.Handle {
 			errMsg := fmt.Sprintf("{'error':'%s'}", err.Error())
 			w.Write([]byte(errMsg))
 		} else {
-			log.V(3).Info("info: extenderBindingResult = ", string(resultBody))
+			log.V(3).Info("info: extenderBindingResult = %s", resultBody)
 			w.Header().Set("Content-Type", "application/json")
 			if failed {
 				w.WriteHeader(http.StatusInternalServerError)
