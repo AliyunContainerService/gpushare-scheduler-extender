@@ -253,7 +253,6 @@ func (n *NodeInfo) allocateGPUID(pod *v1.Pod) (candidateDevID int, found bool) {
 	reqGPU := uint(0)
 	found = false
 	candidateDevID = -1
-	candidateGPUMemory := uint(0)
 	availableGPUs := n.getAvailableGPUs()
 
 	reqGPU = uint(utils.GetGPUMemoryFromPodResource(pod))
@@ -264,15 +263,10 @@ func (n *NodeInfo) allocateGPUID(pod *v1.Pod) (candidateDevID int, found bool) {
 		if len(availableGPUs) > 0 {
 			for devID := 0; devID < len(n.devs); devID++ {
 				availableGPU, ok := availableGPUs[devID]
-				if ok {
-					if availableGPU >= reqGPU {
-						if candidateDevID == -1 || candidateGPUMemory > availableGPU {
-							candidateDevID = devID
-							candidateGPUMemory = availableGPU
-						}
-
-						found = true
-					}
+				if ok && availableGPU >= reqGPU {
+					candidateDevID = devID
+					found = true
+					break
 				}
 			}
 		}
