@@ -182,7 +182,7 @@ func (n *NodeInfo) Allocate(clientset *kubernetes.Clientset, pod *v1.Pod) (err e
 		log.V(3).Info("info: Allocate() 1. Allocate GPU ID %d to pod %s in ns %s.----", devId, pod.Name, pod.Namespace)
 		// newPod := utils.GetUpdatedPodEnvSpec(pod, devId, nodeInfo.GetTotalGPUMemory()/nodeInfo.GetGPUCount())
 		//newPod = utils.GetUpdatedPodAnnotationSpec(pod, devId, n.GetTotalGPUMemory()/n.GetGPUCount())
-		patchedAnnotationBytes, err := utils.PatchPodAnnotationSpec(pod, devId, n.GetTotalGPUMemory()/n.GetGPUCount())
+		patchedAnnotationBytes, err := utils.PatchPodAnnotationSpec(pod, devId, int(n.getAllGPUs()[devId]))
 		if err != nil {
 			return fmt.Errorf("failed to generate patched annotations,reason: %v", err)
 		}
