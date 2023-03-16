@@ -28,57 +28,28 @@ kubectl create -f https://raw.githubusercontent.com/AliyunContainerService/gpush
 
 ## 2\. Modify scheduler configuration
 The goal is to include `scheduler-policy-config.json` into the scheduler configuration (`/etc/kubernetes/manifests/kube-scheduler.yaml`).
-Here is the sample of the final modified [kube-scheduler.yaml](../config/kube-scheduler.yaml)
-
-#### Kubernetes v1.23+
-From Kubernetes v1.23 [scheduling policies are no longer supported](https://kubernetes.io/docs/reference/scheduling/policies/) instead [scheduler configurations](https://kubernetes.io/docs/reference/scheduling/config/) should be used.
-That means `scheduler-policy-config.yaml` needs to be included in the scheduler config (`/etc/kubernetes/manifests/kube-scheduler.yaml`).
-Here is the sample of the final modified [kube-scheduler.yaml](../config/kube-scheduler-v1.23+.yaml)
 
 > Notice: If your Kubernetes default scheduler is deployed as static pod, don't edit the yaml file inside /etc/kubernetes/manifest. You need to edit the yaml file outside the `/etc/kubernetes/manifest` directory. and copy the yaml file you edited to the '/etc/kubernetes/manifest/' directory, and then kubernetes will update the default static pod with the yaml file automatically.
 
-### 2.1 Copy scheduler config file into /etc/kubernetes
+### 2.1 Kubernetes v1.23+
+From Kubernetes v1.23 [scheduling policies are no longer supported](https://kubernetes.io/docs/reference/scheduling/policies/) instead [scheduler configurations](https://kubernetes.io/docs/reference/scheduling/config/) should be used.
+That means `scheduler-policy-config.yaml` needs to be included in the scheduler config (`/etc/kubernetes/manifests/kube-scheduler.yaml`).
 
-```bash
-cd /etc/kubernetes
-curl -O https://raw.githubusercontent.com/AliyunContainerService/gpushare-scheduler-extender/master/config/scheduler-policy-config.json
-````
+Here is the sample of the final modified [kube-scheduler.yaml](../config/kube-scheduler-v1.23+.yaml)
 
-#### Kubernetes v1.23+
+#### 2.1.1 Copy scheduler config file into /etc/kubernetes
 
 ```bash
 cd /etc/kubernetes
 curl -O https://raw.githubusercontent.com/AliyunContainerService/gpushare-scheduler-extender/master/config/scheduler-policy-config.yaml
-````
-
-### 2.1 Add Policy config file parameter in scheduler arguments
-
-```yaml
-- --policy-config-file=/etc/kubernetes/scheduler-policy-config.json
 ```
-
-#### Kubernetes v1.23+
+#### 2.1.2 Add Policy config file parameter in scheduler arguments
 
 ```yaml
 - --config=/etc/kubernetes/scheduler-policy-config.yaml
 ```
 
-### 2.2 Add volume mount into Pod Spec
-
-```yaml
-- mountPath: /etc/kubernetes/scheduler-policy-config.json
-  name: scheduler-policy-config
-  readOnly: true
-```
-
-```yaml
-- hostPath:
-      path: /etc/kubernetes/scheduler-policy-config.json
-      type: FileOrCreate
-  name: scheduler-policy-config
-```
-
-#### Kubernetes v1.23+
+#### 2.1.3 Add volume mount into Pod Spec
 
 ```yaml
 - mountPath: /etc/kubernetes/scheduler-policy-config.yaml
@@ -89,6 +60,38 @@ curl -O https://raw.githubusercontent.com/AliyunContainerService/gpushare-schedu
 ```yaml
 - hostPath:
       path: /etc/kubernetes/scheduler-policy-config.yaml
+      type: FileOrCreate
+  name: scheduler-policy-config
+```
+
+### 2.2 Before Kubernetes v1.23
+
+Here is the sample of the final modified [kube-scheduler.yaml](../config/kube-scheduler.yaml)
+
+#### 2.2.1 Copy scheduler config file into /etc/kubernetes
+
+```bash
+cd /etc/kubernetes
+curl -O https://raw.githubusercontent.com/AliyunContainerService/gpushare-scheduler-extender/master/config/scheduler-policy-config.json
+```
+
+#### 2.2.2 Add Policy config file parameter in scheduler arguments
+
+```yaml
+- --policy-config-file=/etc/kubernetes/scheduler-policy-config.json
+```
+
+#### 2.2.3 Add volume mount into Pod Spec
+
+```yaml
+- mountPath: /etc/kubernetes/scheduler-policy-config.json
+  name: scheduler-policy-config
+  readOnly: true
+```
+
+```yaml
+- hostPath:
+      path: /etc/kubernetes/scheduler-policy-config.json
       type: FileOrCreate
   name: scheduler-policy-config
 ```
