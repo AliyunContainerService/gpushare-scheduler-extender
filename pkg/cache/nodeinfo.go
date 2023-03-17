@@ -182,7 +182,7 @@ func (n *NodeInfo) Allocate(clientset *kubernetes.Clientset, pod *v1.Pod) (err e
 		log.V(3).Info("info: Allocate() 1. Allocate GPU ID %d to pod %s in ns %s.----", devId, pod.Name, pod.Namespace)
 		// newPod := utils.GetUpdatedPodEnvSpec(pod, devId, nodeInfo.GetTotalGPUMemory()/nodeInfo.GetGPUCount())
 		//newPod = utils.GetUpdatedPodAnnotationSpec(pod, devId, n.GetTotalGPUMemory()/n.GetGPUCount())
-		patchedAnnotationBytes, err := utils.PatchPodAnnotationSpec(pod, devId, n.GetTotalGPUMemory()/n.GetGPUCount())
+		patchedAnnotationBytes, err := utils.PatchPodAnnotationSpec(pod, devId, int(n.getAllGPUs()[devId]))
 		if err != nil {
 			return fmt.Errorf("failed to generate patched annotations,reason: %v", err)
 		}
@@ -253,7 +253,6 @@ func (n *NodeInfo) allocateGPUID(pod *v1.Pod) (candidateDevID int, found bool) {
 	reqGPU := uint(0)
 	found = false
 	candidateDevID = -1
-	candidateGPUMemory := uint(0)
 	availableGPUs := n.getAvailableGPUs()
 
 	reqGPU = uint(utils.GetGPUMemoryFromPodResource(pod))
@@ -264,15 +263,10 @@ func (n *NodeInfo) allocateGPUID(pod *v1.Pod) (candidateDevID int, found bool) {
 		if len(availableGPUs) > 0 {
 			for devID := 0; devID < len(n.devs); devID++ {
 				availableGPU, ok := availableGPUs[devID]
-				if ok {
-					if availableGPU >= reqGPU {
-						if candidateDevID == -1 || candidateGPUMemory > availableGPU {
-							candidateDevID = devID
-							candidateGPUMemory = availableGPU
-						}
-
-						found = true
-					}
+				if ok && availableGPU >= reqGPU {
+					candidateDevID = devID
+					found = true
+					break
 				}
 			}
 		}
