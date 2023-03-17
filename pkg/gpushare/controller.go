@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/AliyunContainerService/gpushare-scheduler-extender/pkg/log"
 	"golang.org/x/time/rate"
+	"sync"
 	"time"
 
 	"github.com/AliyunContainerService/gpushare-scheduler-extender/pkg/cache"
@@ -56,7 +57,8 @@ type Controller struct {
 	schedulerCache *cache.SchedulerCache
 
 	// The cache to store the pod to be removed
-	removePodCache map[string]*v1.Pod
+	removePodCacheLock sync.Mutex
+	removePodCache     map[string]*v1.Pod
 }
 
 func NewController(clientset *kubernetes.Clientset, kubeInformerFactory kubeinformers.SharedInformerFactory, stopCh <-chan struct{}) (*Controller, error) {
@@ -71,10 +73,11 @@ func NewController(clientset *kubernetes.Clientset, kubeInformerFactory kubeinfo
 		&workqueue.BucketRateLimiter{Limiter: rate.NewLimiter(rate.Limit(100), 500)},
 	)
 	c := &Controller{
-		clientset:      clientset,
-		podQueue:       workqueue.NewNamedRateLimitingQueue(rateLimiter, "podQueue"),
-		recorder:       recorder,
-		removePodCache: map[string]*v1.Pod{},
+		clientset:          clientset,
+		podQueue:           workqueue.NewNamedRateLimitingQueue(rateLimiter, "podQueue"),
+		recorder:           recorder,
+		removePodCache:     map[string]*v1.Pod{},
+		removePodCacheLock: sync.Mutex{},
 	}
 	// Create pod informer.
 	podInformer := kubeInformerFactory.Core().V1().Pods()
@@ -183,6 +186,24 @@ func (c *Controller) runWorker() {
 	}
 }
 
+func (c *Controller) getPodFromCache(name string) *v1.Pod {
+	c.removePodCacheLock.Lock()
+	defer c.removePodCacheLock.Unlock()
+	return c.removePodCache[name]
+}
+
+func (c *Controller) RemovePodFromCache(key string) {
+	c.removePodCacheLock.Lock()
+	defer c.removePodCacheLock.Unlock()
+	delete(c.removePodCache, key)
+}
+
+func (c *Controller) addPodToRemoveCache(key string, pod *v1.Pod) {
+	c.removePodCacheLock.Lock()
+	defer c.removePodCacheLock.Unlock()
+	c.removePodCache[key] = pod
+}
+
 // syncPod will sync the pod with the given key if it has had its expectations fulfilled,
 // meaning it did not expect to see any more of its pods created or deleted. This function is not meant to be
 // invoked concurrently with the same key.
@@ -197,10 +218,10 @@ func (c *Controller) syncPod(key string) (forget bool, err error) {
 	switch {
 	case errors.IsNotFound(err):
 		log.V(10).Info("debug: pod %s in ns %s has been deleted.", name, ns)
-		pod, found := c.removePodCache[key]
-		if found {
+		pod = c.getPodFromCache(key)
+		if pod != nil {
 			c.schedulerCache.RemovePod(pod)
-			delete(c.removePodCache, key)
+			c.RemovePodFromCache(key)
 		}
 	case err != nil:
 		log.V(10).Info("warn: unable to retrieve pod %v from the store: %v", key, err)
@@ -342,5 +363,5 @@ func (c *Controller) deletePodFromCache(obj interface{}) {
 		return
 	}
 	c.podQueue.Add(podKey)
-	c.removePodCache[podKey] = pod
+	c.addPodToRemoveCache(podKey, pod)
 }
