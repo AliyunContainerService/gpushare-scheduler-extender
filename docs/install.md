@@ -43,6 +43,11 @@ Here is the sample of the final modified [kube-scheduler.yaml](../config/kube-sc
 cd /etc/kubernetes
 curl -O https://raw.githubusercontent.com/AliyunContainerService/gpushare-scheduler-extender/master/config/scheduler-policy-config.yaml
 ```
+
+Note: From Kubernetes v1.28, the kind `KubeSchedulerConfiguration` isn't defined in the apiVersion `kubescheduler.config.k8s.io/v1beta2`, but you can use `kubescheduler.config.k8s.io/v1` instead.
+
+Here is the sample of the final modified [scheduler-policy-config.yaml](../config/scheduler-policy-config-v1.28+.yaml)
+
 #### 2.1.2 Add Policy config file parameter in scheduler arguments
 
 ```yaml
