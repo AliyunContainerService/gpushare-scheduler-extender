@@ -11,10 +11,6 @@ import (
 
 // AssignedNonTerminatedPod selects pods that are assigned and non-terminal (scheduled and running).
 func AssignedNonTerminatedPod(pod *v1.Pod) bool {
-	if pod.DeletionTimestamp != nil {
-		return false
-	}
-
 	if len(pod.Spec.NodeName) == 0 {
 		return false
 	}
@@ -26,10 +22,6 @@ func AssignedNonTerminatedPod(pod *v1.Pod) bool {
 
 // IsCompletePod determines if the pod is complete
 func IsCompletePod(pod *v1.Pod) bool {
-	if pod.DeletionTimestamp != nil {
-		return true
-	}
-
 	if pod.Status.Phase == v1.PodSucceeded || pod.Status.Phase == v1.PodFailed {
 		return true
 	}
