@@ -77,12 +77,12 @@ go build -o $GOPATH/bin/kubectl-inspect-gpushare-v2 cmd/inspect/*.go
 
 - Integrate Nvidia MPS as the option for isolation
 - Automated Deployment for the Kubernetes cluster which is deployed by kubeadm
-- Scheduler Extener High Availablity
+- Scheduler Extender High Availablity
 - Generic Solution for GPU, RDMA and other devices
 
 ## Adopters
 
-If you are intrested in GPUShare and would like to share your experiences with others, you are warmly welcome to add your information on [ADOPTERS.md](docs/ADOPTERS.md) page. We will continuousely discuss new requirements and feature design with you in advance.
+If you are interested in GPUShare and would like to share your experiences with others, you are warmly welcome to add your information on [ADOPTERS.md](docs/ADOPTERS.md) page. We will continuously discuss new requirements and feature design with you in advance.
 
 
 ## Acknowledgments
